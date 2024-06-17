@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import api from './services/api';
+import api from '../../services/api';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Dialog, DialogActions,
   DialogContent, DialogContentText, DialogTitle, TextField, Alert, CircularProgress, Box } from '@mui/material';
 
