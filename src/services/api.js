@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const apiUrl = "https://d3a3-187-21-12-132.ngrok-free.app/";
+export const apiUrl = "http://127.0.0.1:8000/";
 
 export const api = axios.create({
   baseURL: apiUrl,
