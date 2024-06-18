@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, CircularProgress, Box } from '@mui/material';
+import ModalPapers from '../components/ModalPapers';
 
 function Eventos() {
     const [events, setEvents] = useState([]);
@@ -40,8 +41,7 @@ function Eventos() {
                 <TableRow>
                     <TableCell>Nome</TableCell>
                     <TableCell>Promovido Por</TableCell>
-                    <TableCell>Inicio</TableCell>
-                    <TableCell>Fim</TableCell>
+                    <TableCell>Informações do evento</TableCell>
                 </TableRow>
                 </TableHead>
                 <TableBody>
@@ -49,8 +49,7 @@ function Eventos() {
                     <TableRow key={event.id}>
                     <TableCell>{event.name}</TableCell>
                     <TableCell>{event.promoted_by}</TableCell>
-                    <TableCell>{event.initial_date}</TableCell>
-                    <TableCell>{event.final_date}</TableCell>
+                    <TableCell><ModalPapers/></TableCell>
                     </TableRow>
                 ))}
                 </TableBody>
