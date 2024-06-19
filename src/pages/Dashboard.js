@@ -15,11 +15,11 @@ function Dashboard(){
             </Button>
         </a>
 
-        <a href="/metricas">
+        <a href="/papers">
             <Button>
                 <DemoPaper square={false}>
                     <FormatListNumberedIcon/>
-                    <p>Métricas</p>
+                    <p>Papers</p>
                 </DemoPaper>
             </Button>
         </a>

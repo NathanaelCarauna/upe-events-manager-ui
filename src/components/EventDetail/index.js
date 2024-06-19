@@ -71,6 +71,10 @@ const EventDetail = () => {
   };
 
   return (
+
+    //Colocar as informações do evento aqui!
+
+
     <Box>
       <Typography variant="h6" gutterBottom component="div" align="center" fontSize={'40px'} style={{ padding: '20px' }}>
         Listagem de Artigos
