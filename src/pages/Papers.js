@@ -69,7 +69,7 @@ function Papers() {
                         <Table>
                             <TableHead>
                                 <TableRow>
-                                    {['id', 'title', 'authors', 'area', 'is_ignored', 'total_pages'].map((column) => (
+                                    {['id', 'title', 'authors', 'area', 'is_ignored', 'total_pages', 'event_id'].map((column) => (
                                         <TableCell key={column}>
                                             <TableSortLabel
                                                 active={sortConfig.key === column}
@@ -91,6 +91,7 @@ function Papers() {
                                         <TableCell>{paper.area}</TableCell>
                                         <TableCell>{paper.is_ignored ? "Sim" : "Não"}</TableCell>
                                         <TableCell>{paper.total_pages}</TableCell>
+                                        <TableCell>{paper.event_id}</TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

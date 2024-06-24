@@ -94,7 +94,7 @@ function Eventos() {
                                     <TableRow key={event.id}>
                                         <TableCell>{event.name}</TableCell>
                                         <TableCell>{event.promoted_by}</TableCell>
-                                        <TableCell><ModalPapers /></TableCell>
+                                        <TableCell><ModalPapers event_id={event.id}/></TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>
