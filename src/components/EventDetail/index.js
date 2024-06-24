@@ -3,7 +3,8 @@ import api from '../../services/api';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Dialog, DialogActions,
   DialogContent, DialogContentText, DialogTitle, TextField, Alert, CircularProgress, Box } from '@mui/material';
 
-const EventDetail = () => {
+const EventDetail = (props) => {
+  const { event_id } = props;
   const [papers, setPapers] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -15,7 +16,11 @@ const EventDetail = () => {
   const fetchPapers = async () => {
     setLoading(true);
     try {
-      const response = await api.get('/papers');
+      const response = await api.get('/papers', {
+        params: {
+            event_id: event_id
+        }
+    });
       setPapers(response.data.papers);
       setLoading(false);
       setShowPapers(true);
@@ -54,9 +59,10 @@ const EventDetail = () => {
     const formData = new FormData();
     formData.append('csvFile', csvFile);
     formData.append('zipFile', zipFile);
+    console.log(formData);
 
     try {
-      const response = await api.post('/{event_id}', formData, {
+      const response = await api.post('/papers/'+event_id, formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
         }
