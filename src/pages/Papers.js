@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import api from '../services/api';
 
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Select, Button, TextField,
-   CircularProgress, Box, TablePagination,TableSortLabel, MenuItem} from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
+   CircularProgress, Box, TablePagination,TableSortLabel, MenuItem, InputLabel} from '@mui/material';
 
 function Papers () {
   const [papers, setPapers] = useState([]);
@@ -19,15 +19,6 @@ function Papers () {
   const [papersCount,setPapersCount] = useState(0);
   const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' });
 
-
-  const handleSelectEventChange = (event) => {
-    setEventId(event.target.value);
-  };
-
-  const handleSelectAreaChange = (event) => {
-    setArea(event.target.value);
-  };
-
   const handleRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
@@ -40,7 +31,7 @@ function Papers () {
   const handleSearch = () => {
     const filters = {};
 
-    filters.page = page + 1;
+    filters.page = 1;
     filters.page_size = rowsPerPage;
 
     if (eventId) filters.event_id = eventId;
@@ -65,8 +56,6 @@ const clearParams = () => {
 
   const fetchPapers = async (filters = {}) => {
     setLoading(true);
-    setLoading(true);
-    console.log("teste")
     api.get('/papers',{ 
       params: {
         ...filters,
@@ -77,6 +66,7 @@ const clearParams = () => {
       setPapers(response.data.papers);
       setLoading(false);
       setShowPapers(true);
+      setPapersCount(response.data.total_papers)
     }).catch((error) => {
       setError(error);
       setLoading(false);
@@ -102,13 +92,27 @@ const fetchAreas = async () => {
   }
 };
 
+
+useEffect (() => {  
+  const filters = {};
+  filters.page = 1;
+  filters.page_size = rowsPerPage;
+  fetchPapers(filters);
+},[]);
+
+  useEffect (() => {  
+    const filters = {};
+    filters.page = page + 1;
+    filters.page_size = rowsPerPage;
+    fetchPapers(filters);
+  },[page]);
+
   useEffect (() => {  
     const filters = {};
     filters.page = 1;
     filters.page_size = rowsPerPage;
     fetchPapers(filters);
-    setPapersCount(papers.length || 0);
-  },[,rowsPerPage,page]);
+  },[rowsPerPage]);
 
   useEffect (() => {  
     const filters = {};
@@ -120,7 +124,6 @@ const fetchAreas = async () => {
     if (area) filters.area = area;
     if (search) filters.search = search;
     fetchPapers(filters);
-    setPapersCount(papers.length || 0);
   },[sortConfig]);
 
   const sortedPapers = React.useMemo(() => {
@@ -148,137 +151,177 @@ const fetchAreas = async () => {
   };
 
   return (
-    <Paper sx={{width: '90%', marginLeft:'5%', marginTop:'5%'}}>
-      <Typography variant="h6" gutterBottom component="div" align="center" fontSize={'40px'} style={{ padding: '20px' }}>
-        Listagem de Artigos
-      </Typography>
-      <Select
-          defaultValue=""
-          value={eventId}
-          label="Evento"
-          onChange={handleSelectEventChange}
-          onOpen={fetchEvents}
-        >
-          {events.map((event) => (
-            <MenuItem value={event.id} key={event.id}>
-              {event.name}
-            </MenuItem>
-          ))}
-        </Select>
-        <Select
-          defaultValue=""
-          value={area}
-          label="Area"
-          onChange={handleSelectAreaChange}
-          onOpen={fetchAreas}
-        >
-          {areas.map((area) => (
-            <MenuItem value={area} key={area}>
-              {area}
-            </MenuItem>
-          ))}
-        </Select>
-        <TextField
-            label="Busca"
-            defaultValue=""
-            variant="outlined"
-            InputLabelProps={{ 
-              shrink: true
-            }}
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-        />
-        <Button onClick={handleSearch}>Filtrar</Button>
-        <Button onClick={clearParams}>Limpar filtros</Button>
-      <TableContainer component={Paper}>
-        {loading && <CircularProgress />}
-        {error && <Typography color="error" align="center">Erro ao carregar dados: {error.message}</Typography>}
-        {showPapers && !loading && !error && (
-          <>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>
-                  <TableSortLabel
-                      active={sortConfig.key === "id"}
-                      direction={sortConfig.direction}
-                      onClick={() => handleSortRequest("id")}
+        <Box sx={{ pt: 5, pb: 2, pl: 10, pr: 10 }}>
+          <Box sx={{ backgroundColor: '#fff', borderRadius: '20px', p: 3, mb: 3 }}>
+            <Box component="form" sx={{ mb: 3, pb: 1 }}>
+                <Grid container spacing={3} justifyContent="center" sx={{ pb: 1 }}>
+                  <Grid item lg={6} md={6} sm={12}>
+                      <TextField
+                              fullWidth
+                              sx={{ backgroundColor: '#f0f0f0' }}
+                              label="Busca"
+                              variant="outlined"
+                              InputLabelProps={{
+                                  shrink: true
+                              }}
+                              value={search}
+                              onChange={(e) => setSearch(e.target.value)}
+                          />
+                    </Grid>
+                    <Grid item lg={3} md={3} sm={6}>
+                      <Select
+                          sx={{ backgroundColor: '#f0f0f0' }}
+                          variant="outlined"
+                          fullWidth
+                          defaultValue=""
+                          value={eventId}
+                          displayEmpty
+                          onChange={(e) => setEventId(e.target.value)}
+                          onOpen={fetchEvents}
                       >
-                      ID
-                  </TableSortLabel>
-                  
-                  </TableCell>
-                  <TableCell>
-                  <TableSortLabel
-                      active={sortConfig.key === "title"}
-                      direction={sortConfig.direction}
-                      onClick={() => handleSortRequest("title")}
+                          <MenuItem value=""><em>Selecione um evento</em></MenuItem>
+                          {events.map((event) => (
+                            <MenuItem value={event.id} key={event.id}>
+                              {event.name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                  </Grid>
+                  <Grid item lg={3} md={3} sm={6}>
+                    <Select
+                        defaultValue=""
+                        value={area}
+                        variant="outlined"
+                        fullWidth
+                        sx={{ backgroundColor: '#f0f0f0' }}
+                        onChange={(e) => setArea(e.target.value)}
+                        onOpen={fetchAreas}
                       >
-                      Título
-                  </TableSortLabel>
-                  
-                  </TableCell>
-                  <TableCell>
-                  <TableSortLabel
-                      active={sortConfig.key === "authors"}
-                      direction={sortConfig.direction}
-                      onClick={() => handleSortRequest("authors")}
-                      >
-                      Autores
-                  </TableSortLabel>
-                  
-                  </TableCell>
-                  <TableCell>
-                  <TableSortLabel
-                      active={sortConfig.key === "area"}
-                      direction={sortConfig.direction}
-                      onClick={() => handleSortRequest("area")}
-                      >
-                      Área
-                  </TableSortLabel>
-                  
-                  </TableCell>
-                  <TableCell>
-                  <TableSortLabel
-                      active={sortConfig.key === "total_pages"}
-                      direction={sortConfig.direction}
-                      onClick={() => handleSortRequest("total_pages")}
-                      >
-                      Total de Páginas
-                  </TableSortLabel>
-                  
-                  </TableCell>
-                </TableRow>
-
-              </TableHead>
-              <TableBody>
-                {Array.isArray(sortedPapers) && sortedPapers.map((paper) => (
-                  <TableRow key={paper.id}>
-                    <TableCell>{paper.id}</TableCell>
-                    <TableCell>{paper.title}</TableCell>
-                    <TableCell>{paper.authors}</TableCell>
-                    <TableCell>{paper.area}</TableCell>
-                    <TableCell>{paper.total_pages}</TableCell>
-                  </TableRow>
-                  
-                ))}
-              </TableBody>
-            </Table>
-          </>
-        )}
-      </TableContainer>
-      <TablePagination
-        page={page}
-        rowsPerPage={rowsPerPage}
-        component="div"
-        onPageChange={handleChangePage}
-        count={papersCount}
-        labelRowsPerPage="Colunas por página:"
-        rowsPerPageOptions={[5,10,20]}
-        onRowsPerPageChange={handleRowsPerPage}
-        >
-      </TablePagination>
-    </Paper>
+                        <MenuItem value=""><em>Selecione uma área</em></MenuItem>
+                        {areas.map((area) => (
+                          <MenuItem value={area} key={area}>
+                            {area}
+                          </MenuItem>
+                        ))}
+                    </Select>
+                  </Grid>
+                  <Grid item lg={6} md={6} sm={6} container justifyContent="center" alignItems="center">
+                    <Button
+                            variant="contained"
+                            color="primary"
+                            sx={{
+                                width: '95%',
+                                height: '85%',
+                                backgroundColor: '#1976d2',
+                                '&:hover': {
+                                    backgroundColor: '#0c78f3',
+                                },
+                            }}
+                            onClick={handleSearch}
+                    >
+                            Filtrar
+                    </Button>
+                 </Grid>
+                <Grid item lg={6} md={6} sm={6} container justifyContent="center" alignItems="center">
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        sx={{
+                                width: '95%',
+                                height: '85%',
+                                backgroundColor: '#1976d2',
+                                '&:hover': {
+                                    backgroundColor: '#0c78f3',
+                                },
+                            }}
+                        onClick={clearParams}
+                    >
+                        Limpar Filtros
+                    </Button>
+                  </Grid>
+                </Grid>
+            </Box>
+            <TableContainer component={Box} sx={{ borderRadius: '8px', border: '1px solid #CFCECE' }}>
+                {loading && <CircularProgress />}
+                {error && <Typography color="error" align="center">Erro ao carregar dados: {error.message}</Typography>}
+                {!loading && !error && (
+                    <Table>
+                        <TableHead>
+                            <TableRow style={{ backgroundColor: '#f0f0f0' }}>
+                                <TableCell style={{ borderRight: '1px solid #CFCECE', width: '10%', fontWeight: 'bold', paddingLeft: '20px' }}>
+                                <TableSortLabel
+                                      active={sortConfig.key === "id"}
+                                      direction={sortConfig.direction}
+                                      onClick={() => handleSortRequest("id")}
+                                >
+                                      ID
+                                </TableSortLabel>
+                                </TableCell>
+                                <TableCell style={{ borderRight: '1px solid #CFCECE', width: '30%', textAlign: 'center', fontWeight: 'bold' }}>
+                                <TableSortLabel
+                                    active={sortConfig.key === "title"}
+                                    direction={sortConfig.direction}
+                                    onClick={() => handleSortRequest("title")}
+                                >
+                                    Título
+                                </TableSortLabel>
+                                </TableCell>
+                                <TableCell style={{ borderRight: '1px solid #CFCECE', width: '30%', textAlign: 'center', fontWeight: 'bold' }}>
+                                <TableSortLabel
+                                    active={sortConfig.key === "authors"}
+                                    direction={sortConfig.direction}
+                                    onClick={() => handleSortRequest("authors")}
+                                >
+                                    Autores
+                                </TableSortLabel>
+                                </TableCell>
+                                <TableCell style={{ borderRight: '1px solid #CFCECE', width: '15%', textAlign: 'center', fontWeight: 'bold' }}>
+                                <TableSortLabel
+                                    active={sortConfig.key === "area"}
+                                    direction={sortConfig.direction}
+                                    onClick={() => handleSortRequest("area")}
+                                >
+                                    Área
+                                </TableSortLabel>
+                                </TableCell>
+                                <TableCell style={{ borderRight: '1px solid #CFCECE', width: '15%', textAlign: 'center', fontWeight: 'bold' }}>
+                                <TableSortLabel
+                                    active={sortConfig.key === "total_pages"}
+                                    direction={sortConfig.direction}
+                                    onClick={() => handleSortRequest("total_pages")}
+                                >
+                                    Total de Páginas
+                                </TableSortLabel>
+                                </TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {Array.isArray(sortedPapers) && sortedPapers.map((paper) => (
+                                <TableRow key={paper.id}>
+                                    <TableCell style={{ borderRight: '1px solid #CFCECE', paddingLeft: '20px' }}>{paper.id}</TableCell>
+                                    <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{paper.title}</TableCell>
+                                    <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{paper.authors}</TableCell>
+                                    <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{paper.area}</TableCell>
+                                    <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{paper.total_pages}</TableCell>
+                                    </TableRow>
+                            ))}
+                        </TableBody>
+                    </Table>
+                )}
+            </TableContainer>
+            <TablePagination
+              page={page}
+              rowsPerPage={rowsPerPage}
+              component="div"
+              onPageChange={handleChangePage}
+              count={papersCount}
+              labelRowsPerPage="Colunas por página:"
+              rowsPerPageOptions={[5,10,20]}
+              onRowsPerPageChange={handleRowsPerPage}
+              >
+            </TablePagination>
+        </Box>
+    </Box>
   );
 };
 
