@@ -19,29 +19,30 @@ function Dashboard() {
     ErrorService.handleError(error);
   };
 
-  return (
-    <>
-      <a href="/eventos">
-        <Button>
-          <DemoPaper square={false}>
-            <Event />
-            <p>Eventos</p>
-          </DemoPaper>
-        </Button>
-      </a>
+return(
+        <>
+        <a href="/eventos">
+            <Button>
+                <DemoPaper square={false}>
+                    <Event/>
+                    <p>Eventos</p>
+                </DemoPaper>
+            </Button>
+        </a>
 
-      <a href="/metricas">
-        <Button>
-          <DemoPaper square={false}>
-            <FormatListNumberedIcon />
-            <p>Métricas</p>
-          </DemoPaper>
-        </Button>
-      </a>
+        <a href="/papers">
+            <Button>
+                <DemoPaper square={false}>
+                    <FormatListNumberedIcon/>
+                    <p>Papers</p>
+                </DemoPaper>
+            </Button>
+        </a>
 
-      <button onClick={handleSomeAction}>Clique para acionar erro</button>
-    </>
-  );
+        <button onClick={handleSomeAction}>Clique para acionar erro</button>
+        
+        </>
+    )
 }
 
 export default Dashboard;

@@ -5,7 +5,8 @@ import DialogTitle from '@mui/material/DialogTitle';
 import EventDetail from '../EventDetail';
 import IconButton from '@mui/material/IconButton';
 
-export default function ModalPapers() {
+export default function ModalPapers(props) {
+  const { event_id } = props;
   const [open, setOpen] = React.useState(false);
 
   const handleClickOpen = () => {
@@ -37,7 +38,7 @@ export default function ModalPapers() {
             top: 8,
           }}
         />
-        <EventDetail/>
+        <EventDetail event_id={event_id}/>
       </Dialog>
     </React.Fragment>
   );
