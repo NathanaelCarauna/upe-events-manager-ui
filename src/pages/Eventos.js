@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography, CircularProgress, Box, TextField, Button, Grid,  Paper, TableSortLabel } from '@mui/material';
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
+    CircularProgress, Box, TablePagination,TableSortLabel, MenuItem } from '@mui/material';
 import ModalPapers from '../components/ModalPapers';
 
 function Eventos() {
@@ -13,21 +14,33 @@ function Eventos() {
     const [dataInicio, setDataInicio] = useState('');
     const [dataFim, setDataFim] = useState('');
     const [promovidoPor, setPromovidoPor] = useState('');
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [eventsCount, setEventsCount] = useState(0);
+
+    const handleRowsPerPage = (event) => {
+        setRowsPerPage(+event.target.value);
+        setPage(0);
+    };
+
+    const handleChangePage = (event, newPage) => {
+        setPage(newPage);
+    };
 
     const fetchEvents = async (filters = {}) => {
         setLoading(true);
         try {
-            //const response = await api.get('/events', { params: filters });
-
             const response = await api.get('/events', {
                 params: {
                     ...filters,
+                    page: page + 1,
+                    page_size: rowsPerPage,
                     sort_by: sortConfig.key,
                     sort_direction: sortConfig.direction
                 }
             });
-
             setEvents(response.data.events);
+            setEventsCount(response.data.total_events);
             setLoading(false);
         } catch (err) {
             setError(err);
@@ -46,12 +59,12 @@ function Eventos() {
         fetchEvents(filters);
     };
 
-    const clear_fields = () => {
+    const clearFields = () => {
         setNome('');
         setPromovidoPor('');
         setDataInicio('');
         setDataFim('');
-        fetchEvents(); // Refetch para mostrar todos os eventos novamente
+        fetchEvents();
     };
 
     const formatar_backend = (date) => {
@@ -67,7 +80,7 @@ function Eventos() {
         if (dataFim) filters.final_date = formatar_backend(dataFim);
 
         fetchEvents(filters);
-    }, [sortConfig]); // Fetch events whenever sortConfig changes
+    }, [sortConfig, page, rowsPerPage]);
 
     const sortedEvents = React.useMemo(() => {
         let sortableEvents = [...events];
@@ -92,7 +105,6 @@ function Eventos() {
         }
         setSortConfig({ key, direction });
     };
-
 
     return (
         <Box sx={{ pt: 5, pb: 2, pl: 10, pr: 10 }}>
@@ -182,7 +194,7 @@ function Eventos() {
                                         backgroundColor: '#0c78f3',
                                     },
                                 }}
-                                onClick={clear_fields}
+                                onClick={clearFields}
                             >
                                 Limpar Filtros
                             </Button>
@@ -249,12 +261,23 @@ function Eventos() {
                                         <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{event.initial_date}</TableCell>
                                         <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{event.final_date}</TableCell>
                                         <TableCell><ModalPapers event_id={event.id}/></TableCell>
-                                        </TableRow>
+                                    </TableRow>
                                 ))}
                             </TableBody>
                         </Table>
                     )}
                 </TableContainer>
+                <TablePagination
+                    page={page}
+                    rowsPerPage={rowsPerPage}
+                    component="div"
+                    onPageChange={handleChangePage}
+                    count={eventsCount}
+                    labelRowsPerPage="Colunas por página:"
+                    rowsPerPageOptions={[5, 10, 20]}
+                    onRowsPerPageChange={handleRowsPerPage}
+                >
+                </TablePagination>
             </Box>
         </Box>
     );
