@@ -1,34 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import api from '../../services/api';
+import PapersList from '../PapersList';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Typography, Button, Dialog, DialogActions,
   DialogContent, DialogContentText, DialogTitle, TextField, Alert, CircularProgress, Box } from '@mui/material';
 
 const EventDetail = (props) => {
   const { event_id } = props;
-  const [papers, setPapers] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [showPapers, setShowPapers] = useState(false);
+  const [error,setError] = useState(null);
+  const [event,setEvent] = useState(null);
   const [open, setOpen] = useState(false);
   const [csvFile, setCsvFile] = useState(null);
   const [zipFile, setZipFile] = useState(null);
-
-  const fetchPapers = async () => {
-    setLoading(true);
-    try {
-      const response = await api.get('/papers', {
-        params: {
-            event_id: event_id
-        }
-    });
-      setPapers(response.data.papers);
-      setLoading(false);
-      setShowPapers(true);
-    } catch (err) {
-      setError(err);
-      setLoading(false);
-    }
-  };
+  const [init,setInit] = useState(false);
+  const [eventError,setEventError] = useState(null);
 
   const handleOpen = () => {
     setOpen(true);
@@ -68,7 +52,6 @@ const EventDetail = (props) => {
         }
       });
       console.log('Importação bem-sucedida:', response.data);
-      fetchPapers(); 
       handleClose();
     } catch (error) {
       console.error('Erro ao importar os trabalhos:', error);
@@ -76,61 +59,28 @@ const EventDetail = (props) => {
     }
   };
 
+  const fetchEvent = async () => {
+    try {
+        const response = await api.get('/events/' + event_id);
+        setEvent(response.data);
+        setInit(true);
+        console.log(response.data)
+        console.log(eventError)
+        console.log(init)
+    } catch (err) {
+        setEventError(err);
+    }
+  };
+
+  useEffect (() => {
+    fetchEvent();
+  },[]);
+
   return (
 
-    //Colocar as informações do evento aqui!
-
-
-    <Box>
-      <Typography variant="h6" gutterBottom component="div" align="center" fontSize={'40px'} style={{ padding: '20px' }}>
-        Listagem de Artigos
-      </Typography>
-      <TableContainer component={Paper}>
-        {loading && <CircularProgress />}
-        {error && <Typography color="error" align="center">Erro ao carregar dados: {error.message}</Typography>}
-        {showPapers && !loading && !error && (
-          <>
-            <Table>
-              <TableHead>
-                <TableRow>
-                  <TableCell>ID</TableCell>
-                  <TableCell>Título</TableCell>
-                  <TableCell>Autores</TableCell>
-                  <TableCell>Área</TableCell>
-                  <TableCell>Ignorar</TableCell>
-                  <TableCell>Total de Páginas</TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {Array.isArray(papers) && papers.map((paper) => (
-                  <TableRow key={paper.id}>
-                    <TableCell>{paper.id}</TableCell>
-                    <TableCell>{paper.title}</TableCell>
-                    <TableCell>{paper.authors}</TableCell>
-                    <TableCell>{paper.area}</TableCell>
-                    <TableCell>{paper.is_ignored ? "Sim" : "Não"}</TableCell>
-                    <TableCell>{paper.total_pages}</TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-            {papers.length > 0 && papers[0].event && (
-              <Box display="flex" justifyContent="center" style={{ margin: '16px' }}>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  href={`https://s3.amazonaws.com/${papers[0].event.s3_folder_name}/${papers[0].event.anal_filename}`}
-                  target="_blank"
-                >
-                  Gerar Anais
-                </Button>
-              </Box>
-            )}
-          </>
-        )}
-      </TableContainer>
-
-      <Box display="flex" flexDirection="column" alignItems="center" style={{ marginTop: '64px' }}>
+    <>
+      <Box display="flex" flexDirection="column" alignItems="center">
+        <PapersList event_id={event_id} eventModal={true} />
         <Button 
           variant="contained" 
           color="primary" 
@@ -139,14 +89,8 @@ const EventDetail = (props) => {
         >
           Importar Trabalhos em Lote
         </Button>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={fetchPapers}
-        >
-          Carregar Anais
-        </Button>
       </Box>
+      
 
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Importar Trabalhos</DialogTitle>
@@ -181,7 +125,9 @@ const EventDetail = (props) => {
           </Button>
         </DialogActions>
       </Dialog>
-    </Box>
+    </>
+
+
   );
 };
 

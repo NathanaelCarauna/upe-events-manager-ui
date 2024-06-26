@@ -26,7 +26,6 @@ function Eventos() {
                     sort_direction: sortConfig.direction
                 }
             });
-            console.log(response)
 
             setEvents(response.data.events);
             setLoading(false);
