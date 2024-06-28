@@ -235,7 +235,7 @@ function Eventos() {
                                         <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{event.promoted_by}</TableCell>
                                         <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{event.initial_date}</TableCell>
                                         <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{event.final_date}</TableCell>
-                                        <TableCell><ModalPapers event_id={event.id}/></TableCell>
+                                        <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}><ModalPapers event_id={event.id}/></TableCell>
                                     </TableRow>
                                 ))}
                             </TableBody>

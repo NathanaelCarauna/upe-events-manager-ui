@@ -1,13 +1,30 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import EventDetail from '../EventDetail';
-import IconButton from '@mui/material/IconButton';
+import React, { useState, useEffect } from 'react';
+import api from '../../services/api';
+import PapersList from '../PapersList';
+import {Button,Box,TextField,Dialog,DialogTitle,IconButton,CircularProgress,Typography} from '@mui/material';
 
 export default function ModalPapers(props) {
   const { event_id } = props;
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [event,setEvent] = useState(null);
+  const [error,setError] = useState(null);
+  const [loading,setLoading] = useState(true);
+
+  const fetchEvent = async () => {
+    setLoading(true);
+    try {
+        const response = await api.get('/events/' + event_id);
+        setEvent(response.data);
+        setLoading(false);
+    } catch (err) {
+        setError(err);
+        setLoading(false);
+    }
+  };
+
+  useEffect (() => {
+    fetchEvent();
+  },[]);
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -38,7 +55,33 @@ export default function ModalPapers(props) {
             top: 8,
           }}
         />
-        <EventDetail event_id={event_id}/>
+        {loading && <CircularProgress />}
+        {error && <Typography color="error" align="center">Erro ao carregar dados: {error.message}</Typography>}
+        {!loading && !error && (
+          <Box display="flex" flexDirection="column" alignItems="center">
+              <TextField
+                disabled
+                label="Nome do evento"
+                defaultValue={event.name}
+              />
+              <TextField
+                disabled
+                label="Promovido por"
+                defaultValue={event.promoted_by}
+              />
+              <TextField
+                disabled
+                label="Data inicial"
+                defaultValue={event.initial_date}
+              />
+              <TextField
+                disabled
+                label="Data final"
+                defaultValue={event.final_date}
+              />
+            <PapersList event_id={event_id} eventModal={true} />
+          </Box>
+        )};
       </Dialog>
     </React.Fragment>
   );
