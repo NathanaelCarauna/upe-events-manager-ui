@@ -27,42 +27,32 @@ function PapersList (props) {
     setPage(newPage);
   }
 
-  const handleSearch = () => {
-    const filters = {};
-
-    filters.page = 1;
-    filters.page_size = rowsPerPage;
-
-    if (eventId) filters.event_id = eventId;
-    if (area) filters.area = area;
-    if (search) filters.search = search;
-
-    if(props.eventModal) filters.event_id = props.event_id;
-
-    fetchPapers(filters);
-};
-
-const clearParams = () => {
-  setSearch(null);
-  setArea(null);
-  setEventId(null);
-
-  const filters = {};
-  filters.page = 1;
-  filters.page_size = rowsPerPage;
-
-  fetchPapers(filters);
-};
+  const clearParams = () => {
+    setSearch(null);
+    setArea(null);
+    setEventId(null);
+    setPage(0);
+    setSortConfig({ key: 'id', direction: 'asc' });
+  };
 
 
-  const fetchPapers = async (filters = {}) => {
-    console.log(filters);
+  const fetchPapers = async () => {
     setLoading(true);
+    let event_id = null;
+    if(props.eventModal){
+      event_id = props.event_id;      
+    }else{
+      event_id = eventId;
+    }
     api.get('/papers',{ 
       params: {
-        ...filters,
+        search,
+        area,
+        event_id,
         sort_by: sortConfig.key,
-        sort_direction: sortConfig.direction
+        sort_direction: sortConfig.direction,
+        page: page + 1,
+        page_size: rowsPerPage,
       }
     }).then((response) => {
       setPapers(response.data.papers);
@@ -95,14 +85,10 @@ const fetchAreas = async () => {
 
 
 useEffect (() => {
-  const filters = {};
-  filters.page = page + 1;
-  filters.page_size = rowsPerPage;
-  if(props.eventModal) filters.event_id = props.event_id;
-  fetchPapers(filters);
-},[page]);
+  fetchPapers();
+},[page, rowsPerPage, sortConfig]);
 
-
+/*
   useEffect (() => {  
     console.log("useEffect");
     const filters = {};
@@ -125,23 +111,7 @@ useEffect (() => {
     if (area) filters.area = area;
     if (search) filters.search = search;
     fetchPapers(filters);
-  },[sortConfig]);
-
-  const sortedPapers = React.useMemo(() => {
-    let sortablePapers = [...papers];
-    if (sortConfig !== null) {
-        sortablePapers.sort((a, b) => {
-            if (a[sortConfig.key] < b[sortConfig.key]) {
-                return sortConfig.direction === 'asc' ? -1 : 1;
-            }
-            if (a[sortConfig.key] > b[sortConfig.key]) {
-                return sortConfig.direction === 'asc' ? 1 : -1;
-            }
-            return 0;
-        });
-    }
-    return sortablePapers;
-  }, [,rowsPerPage, papers, sortConfig]);
+  },[sortConfig]);*/
 
   const handleSortRequest = (key) => {
       let direction = 'asc';
@@ -149,6 +119,7 @@ useEffect (() => {
           direction = 'desc';
       }
       setSortConfig({ key, direction });
+      setPage(0);
   };
 
   return (
@@ -221,7 +192,7 @@ useEffect (() => {
                                     backgroundColor: '#0c78f3',
                                 },
                             }}
-                            onClick={handleSearch}
+                            onClick={fetchPapers}
                     >
                             Filtrar
                     </Button>
@@ -300,7 +271,7 @@ useEffect (() => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {Array.isArray(sortedPapers) && sortedPapers.map((paper) => (
+                            {Array.isArray(papers) && papers.map((paper) => (
                                 <TableRow key={paper.id}>
                                     <TableCell style={{ borderRight: '1px solid #CFCECE', paddingLeft: '20px' }}>{paper.id}</TableCell>
                                     <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{paper.title}</TableCell>

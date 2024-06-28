@@ -10,10 +10,10 @@ function Eventos() {
     const [error, setError] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
 
-    const [nome, setNome] = useState('');
-    const [dataInicio, setDataInicio] = useState('');
-    const [dataFim, setDataFim] = useState('');
-    const [promovidoPor, setPromovidoPor] = useState('');
+    const [nome, setNome] = useState(null);
+    const [dataInicio, setDataInicio] = useState(null);
+    const [dataFim, setDataFim] = useState(null);
+    const [promovidoPor, setPromovidoPor] = useState(null);
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const [eventsCount, setEventsCount] = useState(0);
@@ -27,12 +27,19 @@ function Eventos() {
         setPage(newPage);
     };
 
-    const fetchEvents = async (filters = {}) => {
+    const fetchEvents = async () => {
         setLoading(true);
+        var initial_date = null;
+        var final_date = null;
+        if (dataInicio) initial_date = formatar_backend(dataInicio);
+        if (dataFim) final_date = formatar_backend(dataFim);
         try {
             const response = await api.get('/events', {
                 params: {
-                    ...filters,
+                    name: nome,
+                    promoted_by: promovidoPor,
+                    initial_date,
+                    final_date,
                     page: page + 1,
                     page_size: rowsPerPage,
                     sort_by: sortConfig.key,
@@ -48,23 +55,13 @@ function Eventos() {
         }
     };
 
-    const handleSearch = () => {
-        const filters = {};
-
-        if (nome) filters.name = nome;
-        if (promovidoPor) filters.promoted_by = promovidoPor;
-        if (dataInicio) filters.initial_date = formatar_backend(dataInicio);
-        if (dataFim) filters.final_date = formatar_backend(dataFim);
-
-        fetchEvents(filters);
-    };
-
     const clearFields = () => {
-        setNome('');
-        setPromovidoPor('');
-        setDataInicio('');
-        setDataFim('');
-        fetchEvents();
+        setNome(null);
+        setPromovidoPor(null);
+        setDataInicio(null);
+        setDataFim(null);
+        setPage(0);
+        setSortConfig({ key: 'id', direction: 'asc' });
     };
 
     const formatar_backend = (date) => {
@@ -73,30 +70,8 @@ function Eventos() {
     };
 
     useEffect(() => {
-        const filters = {};
-        if (nome) filters.name = nome;
-        if (promovidoPor) filters.promoted_by = promovidoPor;
-        if (dataInicio) filters.initial_date = formatar_backend(dataInicio);
-        if (dataFim) filters.final_date = formatar_backend(dataFim);
-
-        fetchEvents(filters);
+        fetchEvents();
     }, [sortConfig, page, rowsPerPage]);
-
-    const sortedEvents = React.useMemo(() => {
-        let sortableEvents = [...events];
-        if (sortConfig !== null) {
-            sortableEvents.sort((a, b) => {
-                if (a[sortConfig.key] < b[sortConfig.key]) {
-                    return sortConfig.direction === 'asc' ? -1 : 1;
-                }
-                if (a[sortConfig.key] > b[sortConfig.key]) {
-                    return sortConfig.direction === 'asc' ? 1 : -1;
-                }
-                return 0;
-            });
-        }
-        return sortableEvents;
-    }, [events, sortConfig]);
 
     const requestSort = (key) => {
         let direction = 'asc';
@@ -177,7 +152,7 @@ function Eventos() {
                                         backgroundColor: '#0c78f3',
                                     },
                                 }}
-                                onClick={handleSearch}
+                                onClick={fetchEvents}
                             >
                                 Filtrar
                             </Button>
@@ -254,7 +229,7 @@ function Eventos() {
                                 </TableRow>
                             </TableHead>
                             <TableBody>
-                                {sortedEvents.map((event) => (
+                                {events.map((event) => (
                                     <TableRow key={event.id}>
                                         <TableCell style={{ borderRight: '1px solid #CFCECE', paddingLeft: '20px' }}>{event.name}</TableCell>
                                         <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{event.promoted_by}</TableCell>
