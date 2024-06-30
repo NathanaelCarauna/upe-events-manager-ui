@@ -6,6 +6,7 @@ import Papers from './pages/Papers';
 import Navbar from './components/Navbar';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+import Footer from './components/Footer';
 
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
           <Route path='/papers' element={<Papers/>} />
         </Routes>
       </Router>
+      <Footer/>
     </>
   );
 }
