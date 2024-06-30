@@ -1,0 +1,29 @@
+.footer_bar {
+    background-color: #1A2D57;    
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    left: 0;
+    bottom: 0;
+    width: 100%;            
+    color: white;
+}
+
+.footer_logo {
+    width: 250px;    
+}
+
+.info_box{
+    max-width: 390px;
+    text-align: left;
+
+}
+
+.info_box span{
+    display: block;
+}
+
+.info_title{
+    font-weight: bold;
+}
