@@ -12,7 +12,7 @@ function App() {
   return (
     <>
       <Navbar />
-      <ToastContainer />;
+      <ToastContainer />
       <Router>
         <Routes>
           <Route path='/' element={<Dashboard/>} />
