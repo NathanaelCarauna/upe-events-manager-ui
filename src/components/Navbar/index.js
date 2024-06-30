@@ -1,28 +1,54 @@
-import * as React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
-import Toolbar from '@mui/material/Toolbar';
-import logo from '../../images/logoupe.png';
-import styles from './index.module.css';
-import IconButton from '@mui/material/IconButton';
-import AccountCircle from '@mui/icons-material/AccountCircle';
+import * as React from "react";
+import styles from "./index.module.css";
+import logo from "../../images/logo_upe.png";
 
-export default function Navbar(){
-    return(
-        <Box sx={{ flexGrow: 1 }}>
-            <AppBar className={styles.navbar_bar}position="static">
-              <Toolbar>
-                <div className={styles.navbar_group}>
-                    <a href="/" edge="start"><img src={logo} className={styles.navbar_logo}></img></a>
-                    <h2 className={styles.navbar_item}>UPE EVENTS MANAGER</h2>
-                    <IconButton size="large" color="black">
-                        <AccountCircle />
-                    </IconButton>
-                </div>
-               </Toolbar>
-            </AppBar>
-        </Box>
-        
-    )
+export default function Navbar() {
+  const [selected, setSelected] = React.useState("inicio");
+
+  const handleMenuClick = (menu) => {
+    setSelected(menu);
+  };
+
+  return (
+    <div className={styles.navbar_bar}>
+      <div className={styles.navbar_group}>
+        <a href="/">
+          <img src={logo} className={styles.navbar_logo} alt="logo" />
+        </a>
+        <ul className={styles.menu}>
+          <a href="/">
+            <li
+              className={`${styles.menu_item} ${
+                selected === "inicio" ? styles.selected : ""
+              }`}
+              onClick={() => handleMenuClick("inicio")}
+            >
+              Início
+            </li>
+          </a>
+          <a href="eventos">
+            <li
+              className={`${styles.menu_item} ${
+                selected === "eventos" ? styles.selected : ""
+              }`}
+              onClick={() => handleMenuClick("eventos")}
+            >
+              Eventos
+            </li>
+          </a>
+          <a href="papers">
+            <li
+              className={`${styles.menu_item} ${
+                selected === "trabalhos" ? styles.selected : ""
+              }`}
+              onClick={() => handleMenuClick("trabalhos")}
+            >
+              Trabalhos
+            </li>
+          </a>
+        </ul>
+      </div>
+      <div className={styles.red_bar}></div>
+    </div>
+  );
 }
-
