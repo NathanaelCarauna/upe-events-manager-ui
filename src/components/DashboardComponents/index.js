@@ -10,9 +10,10 @@ const Dashboard = () => {
     useEffect(() => {
         const buscarQuantidadeTrabalhos = async () => {
             try {
-                const response = await api.get(`/endpoint-trabalhos`); 
-                const {totalTrabalhos} = response.data; 
-                setQuantidadeTrabalhos(totalTrabalhos);
+                //const response = await api.get(`/endpoint-trabalhos`); 
+                //const {totalTrabalhos} = response.data; 
+                //setQuantidadeTrabalhos(totalTrabalhos);
+                setQuantidadeTrabalhos(123);
             } catch (erro) {
                 console.error('Erro ao buscar a quantidade de trabalhos:', erro);
             }
@@ -20,9 +21,10 @@ const Dashboard = () => {
 
         const buscarQuantidadeInscritos = async () => {
             try {
-                const response = await api.get(`/endpoint-inscritos`); 
-                const {totalInscritos} = response.data;
-                setQuantidadeInscritos(totalInscritos);
+                //const response = await api.get(`/endpoint-inscritos`); 
+                //const {totalInscritos} = response.data;
+                //setQuantidadeInscritos(totalInscritos);
+                setQuantidadeInscritos(442);
             } catch (error) {
                 console.error('Erro ao buscar o número de inscritos:', error);
             }
@@ -30,9 +32,10 @@ const Dashboard = () => {
 
         const buscarQuantidadeOuvintes = async () => {
             try {
-                const response = await api.get(`/endpoint-ouvintes`); // Substitua pelo endpoint da API para ouvintes
-                const {totalOuvintes} = response.data; // Supondo que a resposta da API tenha um campo totalOuvintes
-                setQuantidadeOuvintes(totalOuvintes); // Atualiza o estado com os dados obtidos
+                //const response = await api.get(`/endpoint-ouvintes`);
+                //const {totalOuvintes} = response.data;
+                //setQuantidadeOuvintes(totalOuvintes);
+                setQuantidadeOuvintes(256);
             } catch (erro) {
                 console.error('Erro ao buscar a quantidade de ouvintes:', erro);
             }

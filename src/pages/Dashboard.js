@@ -8,13 +8,6 @@ import DashboardComponents from '../components/DashboardComponents';
 import api from '../services/api';
 
 function Dashboard() {
-  // Teste provisório
-  const [data, setData] = useState({
-    totalTrabalhos: 0,
-    totalInscritos: 0,
-    totalOuvintes: 0
-  });
-
   const handleSomeAction = async () => {
     const error = {
       response: {
@@ -54,7 +47,7 @@ function Dashboard() {
       </Grid>
 
       <Box sx={{ mt: 5 }}>
-        <DashboardComponents data={data} />
+        <DashboardComponents/>
       </Box>
 
       <Box sx={{ mt: 5 }} display="flex" justifyContent="center">
