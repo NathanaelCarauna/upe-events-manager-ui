@@ -1,12 +1,13 @@
-import Button from "@mui/material/Button";
-import DemoPaper from "@mui/material/Paper";
-import Event from "@mui/icons-material/Event";
+import React, { useEffect, useState } from 'react';
+import { Box, Button, Paper, Grid } from '@mui/material';
+import EventIcon from "@mui/icons-material/Event";
 import FormatListNumberedIcon from "@mui/icons-material/FormatListNumbered";
-import { toast } from "react-toastify";
 import ErrorService from "../services/errorService";
+import Graph from '../components/DashboardGraph';
+import DashboardComponents from '../components/DashboardComponents';
+import api from '../services/api';
 
 function Dashboard() {
-    
   const handleSomeAction = async () => {
     const error = {
       response: {
@@ -19,30 +20,41 @@ function Dashboard() {
     ErrorService.handleError(error);
   };
 
-return(
-        <>
-        <a href="/eventos">
-            <Button>
-                <DemoPaper square={false}>
-                    <Event/>
-                    <p>Eventos</p>
-                </DemoPaper>
+  return (
+    <Box sx={{ pt: 2, pb: 2, pl: 5, pr: 5 }}>
+      <Grid container spacing={3} justifyContent="center">
+        <Grid item>
+          <a href="/eventos">
+            <Button variant="contained" color="primary">
+              <EventIcon />
+              <p>Eventos</p>
             </Button>
-        </a>
-
-        <a href="/papers">
-            <Button>
-                <DemoPaper square={false}>
-                    <FormatListNumberedIcon/>
-                    <p>Papers</p>
-                </DemoPaper>
+          </a>
+        </Grid>
+        <Grid item>
+          <a href="/papers">
+            <Button variant="contained" color="secondary">
+              <FormatListNumberedIcon />
+              <p>Papers</p>
             </Button>
-        </a>
+          </a>
+        </Grid>
+        <Grid item>
+          <Button variant="outlined" onClick={handleSomeAction}>
+            Clique para acionar erro
+          </Button>
+        </Grid>
+      </Grid>
 
-        <button onClick={handleSomeAction}>Clique para acionar erro</button>
-        
-        </>
-    )
-}
+      <Box sx={{ mt: 5 }}>
+        <DashboardComponents/>
+      </Box>
+
+      <Box sx={{ mt: 5 }} display="flex" justifyContent="center">
+        <Graph />
+      </Box>
+    </Box>
+  );
+};
 
 export default Dashboard;
