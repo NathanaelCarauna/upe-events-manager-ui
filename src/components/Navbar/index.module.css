@@ -1,22 +1,55 @@
-.navbar_bar{
-    background-color:white !important;
+.navbar_bar {
+    background-color: #1A2D57;
+    
 }
-.navbar_logo{
-    width:100px;
+
+.navbar_logo {
+    width: 100px;
+    margin: 15px;
 }
-.navbar_group{
+
+.navbar_group {
     display: flex;
     align-items: center;
     justify-content: space-between;
     width: 100%;
 }
-.navbar_item{
-    font-size:30px;
-    color: black;
+
+.red_bar{
+    margin: 0px;
+    height: 5px;
+    width: 100%;
+    background-color: red;
 }
-a:link{
+
+.menu {
+    display: flex;
+    list-style-type: none;
+    padding: 0;
+    margin-left: 0;
+}
+
+.menu_item {
+    margin-right: 40px;
+    font-size: 20px;
+    font-weight: 200;
+    color: white;
+    cursor: pointer;
+}
+
+.menu_item:hover {
+    opacity: 0.7;
+}
+
+.selected {
+    
+    font-weight: 600;
+}
+
+a:link {
     text-decoration: none;
 }
-a:hover{
+
+a:hover {
     opacity: 60%;
 }
