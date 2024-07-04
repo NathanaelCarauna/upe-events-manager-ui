@@ -3,6 +3,8 @@ import api from '../../services/api';
 
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
    CircularProgress, Box, TablePagination,TableSortLabel, MenuItem } from '@mui/material';
+import Stack from '@mui/material/Stack';
+import Pagination from '@mui/material/Pagination';
 
 function PapersList (props) {
   const [papers, setPapers] = useState([]);
@@ -313,17 +315,52 @@ useEffect (() => {
                     </Table>
                 )}
             </TableContainer>
-            <TablePagination
-              page={page}
-              rowsPerPage={rowsPerPage}
-              component="div"
-              onPageChange={handleChangePage}
-              count={papersCount}
-              labelRowsPerPage="Colunas por página:"
-              rowsPerPageOptions={[5,10,20]}
-              onRowsPerPageChange={handleRowsPerPage}
-              >
-            </TablePagination>
+            <Stack spacing={2} sx={{ pt: 5, justifyContent: 'flex-end', alignItems: 'center', flexDirection: 'row', display: 'flex' }}>
+                    <Pagination
+                        variant="outlined"
+                        siblingCount={1} 
+                        boundaryCount={1}
+                        color="secondary"
+                        page={page + 1}
+                        count={Math.ceil(papersCount / rowsPerPage)}
+                        onChange={(_, newPage) => handleChangePage(null, newPage - 1)}
+                        shape='rounded'
+                        sx={{
+                            '& .MuiPaginationItem-root': {
+                                color: '#253555',
+                                backgroundColor: '#D9D9D9',
+                            },
+                            '& .Mui-selected': {
+                                backgroundColor: '#253555 !important',
+                                color: '#FFFFFF !important',
+                            },
+                            '& .MuiPaginationItem-page': {
+                                '&:hover': {
+                                    backgroundColor: '#253555',
+                                    color: '#FFFFFF',
+                                }
+                            },
+                            pt: 2,
+                            pr: 1,
+                        }}
+                    />
+                    <Select
+                        value={page + 1}
+                        onChange={(e) => handleChangePage(null, e.target.value - 1)}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'select page' }}
+                        sx={{
+                            height: '36px',
+                            backgroundColor: '#D9D9D9',
+                        }}
+                    >
+                        {Array.from(Array(Math.ceil(papersCount / rowsPerPage)).keys()).map((pageNumber) => (
+                            <MenuItem key={pageNumber} value={pageNumber + 1}>
+                                {pageNumber + 1}a página
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </Stack>
         </Box>
     </Box>
   );
