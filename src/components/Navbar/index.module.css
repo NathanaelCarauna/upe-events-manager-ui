@@ -1,6 +1,8 @@
 .navbar_bar {
+    position: sticky;
+    top: 0px;
+    z-index: 1;
     background-color: #1A2D57;
-    
 }
 
 .navbar_logo {
