@@ -3,6 +3,7 @@ import api from '../services/api';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
     CircularProgress, Box, TablePagination,TableSortLabel, Modal } from '@mui/material';
 import ModalPapers from '../components/ModalPapers';
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 
 function Eventos() {
     const [events, setEvents] = useState([]);
@@ -95,11 +96,26 @@ function Eventos() {
             <Box sx={{ backgroundColor: '#fff', borderRadius: '20px', p: 3, mb: 3 }}>
             <Box component="form" sx={{ mb: 3, pb: 1}}>
                     <Grid container spacing={3} justifyContent="center" sx={{ pb: 1 }}>
-                        <Grid item xs={12} sm={6} md={6}>
-                            <TextField
+                        <Grid item xs={12} sm={6} md={11.3} sx={{pl: 2}}>
+                        <TextField
                                 fullWidth
-                                label="Nome"
-                                sx={{ backgroundColor: '#f0f0f0' }}
+                                placeholder="Pesquisar..."
+                                sx={{
+                                    backgroundColor: '#D9D9D9',
+                                    borderRadius: '20px',
+                                    boxShadow: 5,
+                                    '& .MuiOutlinedInput-root': {
+                                        '& fieldset': {
+                                            border: 'none',
+                                        },
+                                        '& input': {
+                                            '&::placeholder': {
+                                                color: '#4A4747',
+                                                opacity: 1,
+                                            },
+                                        },
+                                    },
+                                }}
                                 variant="outlined"
                                 InputLabelProps={{
                                     shrink: true,
@@ -108,24 +124,27 @@ function Eventos() {
                                 onChange={(e) => setNome(e.target.value)}
                             />
                         </Grid>
-                        <Grid item xs={12} sm={6} md={2} container justifyContent="center" alignItems="center">
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                sx={{
-                                    width: '95%',
-                                    height: '85%',
-                                    backgroundColor: '#1976d2',
-                                    '&:hover': {
-                                        backgroundColor: '#0c78f3',
-                                    },
-                                }}
-                                onClick={fetchEvents}
-                            >
-                                Buscar
-                            </Button>
+                        <Grid item xs={12} sm={6} md={0.5} container justifyContent="center" alignItems="center">
+                        <Button
+                            variant="contained"
+                            sx={{
+                                width: 'auto',
+                                height: 'auto',
+                                boxShadow: 5,
+                                backgroundColor: '#D9D9D9',
+                                '&:hover': {
+                                    backgroundColor: '#BFBFBF',
+                                },
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: '8px',
+                            }}
+                            onClick={fetchEvents}
+                        >
+                            <FilterAltIcon sx={{ color: '#1C3C78' }} />
+                        </Button>
                         </Grid>
-                        <Button onClick={handleOpen}>Filtros</Button>
                     </Grid>
             </Box>
             <Modal

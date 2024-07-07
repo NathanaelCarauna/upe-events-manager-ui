@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
-
+import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
    CircularProgress, Box, TablePagination,TableSortLabel, MenuItem, Modal } from '@mui/material';
 
@@ -135,38 +135,56 @@ useEffect (() => {
           <Box sx={{ backgroundColor: '#fff', borderRadius: '20px', p: 3, mb: 3 }}>
           <Box component="form" sx={{ mb: 3, pb: 1 }}>
                 <Grid container spacing={3} justifyContent="center" sx={{ pb: 1}}>
-                  <Grid item lg={6} md={6} sm={12}>
-                      <TextField
-                              fullWidth
-                              sx={{ backgroundColor: '#f0f0f0' }}
-                              label="Busca"
-                              variant="outlined"
-                              InputLabelProps={{
-                                  shrink: true
-                              }}
-                              value={search}
-                              onChange={(e) => setSearch(e.target.value)}
-                          />
+                  <Grid item xs={12} sm={6} md={11.3} sx={{pl: 2}}>
+                    <TextField
+                                  fullWidth
+                                  placeholder="Pesquisar..."
+                                  sx={{
+                                      backgroundColor: '#D9D9D9',
+                                      borderRadius: '20px',
+                                      boxShadow: 5,
+                                      '& .MuiOutlinedInput-root': {
+                                        '& fieldset': {
+                                            border: 'none',
+                                        },
+                                        '& input': {
+                                            '&::placeholder': {
+                                                color: '#4A4747',
+                                                opacity: 1,
+                                            },
+                                        },
+                                    },
+                                  }}
+                                  variant="outlined"
+                                  InputLabelProps={{
+                                      shrink: true,
+                                  }}
+                                  value={search}
+                                  onChange={(e) => setSearch(e.target.value)}
+                            />
                     </Grid>
-                  <Grid item lg={6} md={6} sm={6} container justifyContent="center" alignItems="center">
+                    <Grid item xs={12} sm={6} md={0.5} container justifyContent="center" alignItems="center">
                     <Button
                             variant="contained"
-                            color="primary"
                             sx={{
-                                width: '95%',
-                                height: '85%',
-                                backgroundColor: '#1976d2',
+                                width: 'auto',
+                                height: 'auto',
+                                boxShadow: 5,
+                                backgroundColor: '#D9D9D9',
                                 '&:hover': {
-                                    backgroundColor: '#0c78f3',
+                                    backgroundColor: '#BFBFBF',
                                 },
+                                display: 'flex',
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                padding: '8px',
                             }}
                             onClick={fetchPapers}
-                    >
-                            Buscar
-                    </Button>
+                        >
+                            <FilterAltIcon sx={{ color: '#1C3C78' }} />
+                        </Button>
                  </Grid>
                 </Grid>
-                <Button onClick={handleOpen}>Filtros</Button>
             </Box>
             <Modal
                 open={open}
