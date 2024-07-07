@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
-    CircularProgress, Box, TablePagination,TableSortLabel, MenuItem } from '@mui/material';
+    CircularProgress, Box, TablePagination,TableSortLabel, Modal } from '@mui/material';
 import ModalPapers from '../components/ModalPapers';
 
 function Eventos() {
@@ -9,7 +9,7 @@ function Eventos() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
-
+    const [open, setOpen] = React.useState(false);
     const [nome, setNome] = useState(null);
     const [dataInicio, setDataInicio] = useState(null);
     const [dataFim, setDataFim] = useState(null);
@@ -21,6 +21,15 @@ function Eventos() {
     const handleRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
         setPage(0);
+    };
+
+    
+
+    const handleOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
     };
 
     const handleChangePage = (event, newPage) => {
@@ -84,7 +93,58 @@ function Eventos() {
     return (
         <Box sx={{ pt: 5, pb: 2, pl: 10, pr: 10 }}>
             <Box sx={{ backgroundColor: '#fff', borderRadius: '20px', p: 3, mb: 3 }}>
-                <Box component="form" sx={{ mb: 3, pb: 1 }}>
+            <Box component="form" sx={{ mb: 3, pb: 1}}>
+                    <Grid container spacing={3} justifyContent="center" sx={{ pb: 1 }}>
+                        <Grid item xs={12} sm={6} md={6}>
+                            <TextField
+                                fullWidth
+                                label="Nome"
+                                sx={{ backgroundColor: '#f0f0f0' }}
+                                variant="outlined"
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                                value={nome}
+                                onChange={(e) => setNome(e.target.value)}
+                            />
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={2} container justifyContent="center" alignItems="center">
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                sx={{
+                                    width: '95%',
+                                    height: '85%',
+                                    backgroundColor: '#1976d2',
+                                    '&:hover': {
+                                        backgroundColor: '#0c78f3',
+                                    },
+                                }}
+                                onClick={fetchEvents}
+                            >
+                                Buscar
+                            </Button>
+                        </Grid>
+                        <Button onClick={handleOpen}>Filtros</Button>
+                    </Grid>
+            </Box>
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="parent-modal-title"
+                aria-describedby="parent-modal-description"
+            >
+                <Box component="form" sx={{ mb: 3, pb: 1 ,position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 1000,
+                    bgcolor: 'background.paper',
+                    border: '2px solid #000',
+                    boxShadow: 24,
+                    pt: 2,
+                    px: 4,
+                    pb: 3,}}>
                     <Grid container spacing={3} justifyContent="center" sx={{ pb: 1 }}>
                         <Grid item xs={12} sm={6} md={6}>
                             <TextField
@@ -173,12 +233,46 @@ function Eventos() {
                             >
                                 Limpar Filtros
                             </Button>
+
+                        </Grid>
+
+                        <Grid item xs={12} sm={6} md={2} container justifyContent="center" alignItems="center">
+                                    <TableSortLabel
+                                            active={sortConfig.key === 'name'}
+                                            direction={sortConfig.direction}
+                                            onClick={() => requestSort('name')}
+                                        >
+                                        Nome
+                                        </TableSortLabel>
+                                    <TableSortLabel
+                                            active={sortConfig.key === 'promoted_by'}
+                                            direction={sortConfig.direction}
+                                            onClick={() => requestSort('promoted_by')}
+                                        >
+                                        Promovido Por
+                                        </TableSortLabel>
+                                    <TableSortLabel
+                                            active={sortConfig.key === 'initial_date'}
+                                            direction={sortConfig.direction}
+                                            onClick={() => requestSort('initial_date')}
+                                        >
+                                        Data Inicial
+                                        </TableSortLabel>
+                                    <TableSortLabel
+                                            active={sortConfig.key === 'final_date'}
+                                            direction={sortConfig.direction}
+                                            onClick={() => requestSort('final_date')}
+                                        >
+                                        Data Final
+                                        </TableSortLabel>
                         </Grid>
                     </Grid>
+
                     <Typography variant="body2" color="textSecondary" sx={{ mb: 1, fontSize: '0.80rem' }}>
                         * Para filtrar por data, informe tanto a data de início como a de fim do evento *
                     </Typography>
                 </Box>
+                </Modal>
 
                 <TableContainer component={Box} sx={{ borderRadius: '8px', border: '1px solid #CFCECE' }}>
                     {loading && <CircularProgress />}
