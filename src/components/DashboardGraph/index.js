@@ -12,6 +12,8 @@ function Graph() {
                 const response = await api.get('/papers');
                 const papers = response.data.papers;
 
+                console.log(papers)
+
                 if (papers.length === 0) {
                     setData([{ id: 1, label: 'Não há dados', value: 1, color: '#1976d2' }]);
                 } else {

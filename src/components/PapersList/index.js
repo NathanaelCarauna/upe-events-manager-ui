@@ -2,10 +2,16 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
-   CircularProgress, Box, TablePagination,TableSortLabel, MenuItem, Modal, InputAdornment } from '@mui/material';
+   CircularProgress, Box, TablePagination,TableSortLabel, MenuItem, Modal, InputAdornment, 
+   Tab} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
+import EditIcon from '@mui/icons-material/Edit';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import PrintIcon from '@mui/icons-material/Print';
 import Stack from '@mui/material/Stack';
 import Pagination from '@mui/material/Pagination';
+import { styled } from '@mui/material/styles';
+import styles from "./index.module.css";
 
 function PapersList (props) {
   const [papers, setPapers] = useState([]);
@@ -16,22 +22,22 @@ function PapersList (props) {
   const [search,setSearch] = useState(null);
   const [area,setArea] = useState(null);
   const [eventId,setEventId] = useState(null);
-  const [page,setPage] = useState(0);
-  const [rowsPerPage,setRowsPerPage] = useState(10);
-  const [papersCount,setPapersCount] = useState(0);
+  const [page,setPage] = useState(1);
+  const [totalPages,setTotalPages] = useState(0);
   const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' });
   const [open, setOpen] = React.useState(false);
+
+  const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+      backgroundColor: theme.palette.action.hover,
+    },
+  }));
 
   const handleOpen = () => {
     setOpen(true);
   };
   const handleClose = () => {
       setOpen(false);
-  };
-
-  const handleRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
   };
 
   const handleChangePage = (event,newPage) => {
@@ -49,7 +55,7 @@ function PapersList (props) {
     setSearch(null);
     setArea(null);
     setEventId(null);
-    setPage(0);
+    setPage(1);
     setSortConfig({ key: 'id', direction: 'asc' });
   };
 
@@ -69,13 +75,13 @@ function PapersList (props) {
         event_id,
         sort_by: sortConfig.key,
         sort_direction: sortConfig.direction,
-        page: page + 1,
-        page_size: rowsPerPage,
+        page: page,
+        page_size: 10,
       }
     }).then((response) => {
       setPapers(response.data.papers);
       setLoading(false);
-      setPapersCount(response.data.total_papers)
+      setTotalPages(response.data.total_pages);
     }).catch((error) => {
       setError(error);
       setLoading(false);
@@ -104,32 +110,7 @@ const fetchAreas = async () => {
 
 useEffect (() => {
   fetchPapers();
-},[page, rowsPerPage, sortConfig]);
-
-/*
-  useEffect (() => {  
-    console.log("useEffect");
-    const filters = {};
-    filters.page = 1;
-    filters.page_size = rowsPerPage;
-    if(props.eventModal) filters.event_id = props.event_id;
-    fetchPapers(filters);
-  },[rowsPerPage]);
-
-  useEffect (() => {  
-    console.log("useEffect");
-    const filters = {};
-
-    filters.page = page + 1;
-    filters.page_size = rowsPerPage;
-
-    if(props.eventModal) filters.event_id = props.event_id;
-
-    if (eventId) filters.event_id = eventId;
-    if (area) filters.area = area;
-    if (search) filters.search = search;
-    fetchPapers(filters);
-  },[sortConfig]);*/
+},[page, sortConfig]);
 
   const handleSortRequest = (key) => {
       let direction = 'asc';
@@ -137,12 +118,11 @@ useEffect (() => {
           direction = 'desc';
       }
       setSortConfig({ key, direction });
-      setPage(0);
+      setPage(1);
   };
 
   return (
         <Box sx={{ pt: 5, pb: 2, pl: 10, pr: 10 }}>
-          <Box sx={{ backgroundColor: '#fff', borderRadius: '20px', p: 3, mb: 3 }}>
           <Box component="form" sx={{ mb: 3, pb: 1 }}>
                 <Grid container spacing={3} justifyContent="center" sx={{ pb: 1}}>
                   <Grid item xs={12} sm={6} md={11.3} sx={{pl: 2}}>
@@ -349,69 +329,50 @@ useEffect (() => {
 
                 </Grid>
             </Box></Modal>
-            <TableContainer component={Box} sx={{ borderRadius: '8px', border: '1px solid #CFCECE' }}>
+            <TableContainer component={Box} sx={{ borderRadius: '8px'}}>
                 {loading && <CircularProgress />}
                 {error && <Typography color="error" align="center">Erro ao carregar dados: {error.message}</Typography>}
                 {!loading && !error && (
                     <Table>
-                        <TableHead>
-                            <TableRow style={{ backgroundColor: '#f0f0f0' }}>
-                                <TableCell style={{ borderRight: '1px solid #CFCECE', width: '10%', fontWeight: 'bold', paddingLeft: '20px' }}>
-                                <TableSortLabel
-                                      active={sortConfig.key === "id"}
-                                      direction={sortConfig.direction}
-                                      onClick={() => handleSortRequest("id")}
-                                >
-                                      ID
-                                </TableSortLabel>
-                                </TableCell>
-                                <TableCell style={{ borderRight: '1px solid #CFCECE', width: '30%', textAlign: 'center', fontWeight: 'bold' }}>
-                                <TableSortLabel
-                                    active={sortConfig.key === "title"}
-                                    direction={sortConfig.direction}
-                                    onClick={() => handleSortRequest("title")}
-                                >
-                                    Título
-                                </TableSortLabel>
-                                </TableCell>
-                                <TableCell style={{ borderRight: '1px solid #CFCECE', width: '30%', textAlign: 'center', fontWeight: 'bold' }}>
-                                <TableSortLabel
-                                    active={sortConfig.key === "authors"}
-                                    direction={sortConfig.direction}
-                                    onClick={() => handleSortRequest("authors")}
-                                >
-                                    Autores
-                                </TableSortLabel>
-                                </TableCell>
-                                <TableCell style={{ borderRight: '1px solid #CFCECE', width: '15%', textAlign: 'center', fontWeight: 'bold' }}>
-                                <TableSortLabel
-                                    active={sortConfig.key === "area"}
-                                    direction={sortConfig.direction}
-                                    onClick={() => handleSortRequest("area")}
-                                >
-                                    Área
-                                </TableSortLabel>
-                                </TableCell>
-                                <TableCell style={{ borderRight: '1px solid #CFCECE', width: '15%', textAlign: 'center', fontWeight: 'bold' }}>
-                                <TableSortLabel
-                                    active={sortConfig.key === "total_pages"}
-                                    direction={sortConfig.direction}
-                                    onClick={() => handleSortRequest("total_pages")}
-                                >
-                                    Total de Páginas
-                                </TableSortLabel>
-                                </TableCell>
-                            </TableRow>
-                        </TableHead>
                         <TableBody>
                             {Array.isArray(papers) && papers.map((paper) => (
-                                <TableRow key={paper.id}>
-                                    <TableCell style={{ borderRight: '1px solid #CFCECE', paddingLeft: '20px' }}>{paper.id}</TableCell>
-                                    <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{paper.title}</TableCell>
-                                    <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{paper.authors}</TableCell>
-                                    <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{paper.area}</TableCell>
-                                    <TableCell style={{ borderRight: '1px solid #CFCECE', textAlign: 'center' }}>{paper.total_pages}</TableCell>
-                                    </TableRow>
+                                <StyledTableRow key={paper.id}>
+                                    <TableCell style={{ width: "5%", textAlign: 'center'}}><EditIcon/></TableCell>
+                                    <TableCell style={{ width: "20%" }}>
+                                      <Typography variant="h6">
+                                        Evento:
+                                      </Typography>
+                                      <Typography>
+                                        Evento Teste
+                                      </Typography>
+                                    </TableCell>
+                                    <TableCell style={{ width: "25%", textAlign: 'left' }}>
+                                      <Typography variant="h6">
+                                        Área:
+                                      </Typography>
+                                      <Typography>
+                                        {paper.area}
+                                      </Typography>
+                                    </TableCell>
+                                    <TableCell style={{ width: "22%", textAlign: 'left' }}>
+                                      <Typography variant="h6">
+                                        Título
+                                      </Typography>
+                                      <Typography>
+                                        {paper.title}
+                                      </Typography>
+                                    </TableCell>
+                                    <TableCell style={{ width: "22%", textAlign: 'left' }}>
+                                      <Typography variant="h6">
+                                        Autor principal:
+                                      </Typography>
+                                      <Typography>
+                                        {paper.authors}
+                                      </Typography>
+                                    </TableCell>
+                                    <TableCell style={{ width: "3%", textAlign: 'center'}}><VisibilityIcon/></TableCell>
+                                    <TableCell style={{ width: "3%", textAlign: 'center'}}><PrintIcon/></TableCell>
+                                  </StyledTableRow>
                             ))}
                         </TableBody>
                     </Table>
@@ -423,9 +384,9 @@ useEffect (() => {
                         siblingCount={1} 
                         boundaryCount={1}
                         color="secondary"
-                        page={page + 1}
-                        count={Math.ceil(papersCount / rowsPerPage)}
-                        onChange={(_, newPage) => handleChangePage(null, newPage - 1)}
+                        page={page}
+                        count={totalPages}
+                        onChange={handleChangePage}
                         shape='rounded'
                         sx={{
                             '& .MuiPaginationItem-root': {
@@ -447,8 +408,8 @@ useEffect (() => {
                         }}
                     />
                     <Select
-                        value={page + 1}
-                        onChange={(e) => handleChangePage(null, e.target.value - 1)}
+                        value={page}
+                        onChange={(e) => setPage(e.target.value)}
                         displayEmpty
                         inputProps={{ 'aria-label': 'select page' }}
                         sx={{
@@ -456,14 +417,13 @@ useEffect (() => {
                             backgroundColor: '#D9D9D9',
                         }}
                     >
-                        {Array.from(Array(Math.ceil(papersCount / rowsPerPage)).keys()).map((pageNumber) => (
+                        {Array.from(Array(totalPages).keys()).map((pageNumber) => (
                             <MenuItem key={pageNumber} value={pageNumber + 1}>
-                                {pageNumber + 1}a página
+                                {pageNumber + 1}/ página
                             </MenuItem>
                         ))}
                     </Select>
                 </Stack>
-        </Box>
     </Box>
   );
 };

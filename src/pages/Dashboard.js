@@ -22,30 +22,6 @@ function Dashboard() {
 
   return (
     <Box sx={{ pt: 2, pb: 2, pl: 5, pr: 5 }}>
-      <Grid container spacing={3} justifyContent="center">
-        <Grid item>
-          <a href="/eventos">
-            <Button variant="contained" color="primary">
-              <EventIcon />
-              <p>Eventos</p>
-            </Button>
-          </a>
-        </Grid>
-        <Grid item>
-          <a href="/papers">
-            <Button variant="contained" color="secondary">
-              <FormatListNumberedIcon />
-              <p>Papers</p>
-            </Button>
-          </a>
-        </Grid>
-        <Grid item>
-          <Button variant="outlined" onClick={handleSomeAction}>
-            Clique para acionar erro
-          </Button>
-        </Grid>
-      </Grid>
-
       <Box sx={{ mt: 5 }}>
         <DashboardComponents/>
       </Box>
