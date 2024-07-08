@@ -290,43 +290,35 @@ useEffect (() => {
                     </Button>
                   </Grid>
                   <Grid item xs={12} sm={6} md={2} container justifyContent="center" alignItems="center">
-                                    <TableSortLabel
-                                            active={sortConfig.key === 'id'}
-                                            direction={sortConfig.direction}
-                                            onClick={() => handleSortRequest('id')}
-                                        >
-                                        ID
-                                        </TableSortLabel>
-                                    <TableSortLabel
-                                            active={sortConfig.key === 'title'}
-                                            direction={sortConfig.direction}
-                                            onClick={() => handleSortRequest('title')}
-                                        >
-                                        Título
-                                        </TableSortLabel>
-                                    <TableSortLabel
-                                            active={sortConfig.key === 'authors'}
-                                            direction={sortConfig.direction}
-                                            onClick={() => handleSortRequest('authors')}
-                                        >
-                                        Autores
-                                        </TableSortLabel>
-                                    <TableSortLabel
-                                            active={sortConfig.key === 'area'}
-                                            direction={sortConfig.direction}
-                                            onClick={() => handleSortRequest('area')}
-                                        >
-                                        Área
-                                    </TableSortLabel>
-                                    <TableSortLabel
-                                            active={sortConfig.key === 'total_pages'}
-                                            direction={sortConfig.direction}
-                                            onClick={() => handleSortRequest('total_pages')}
-                                        >
-                                        Total de Páginas
-                                    </TableSortLabel>
-                        </Grid>
-
+                    <TableSortLabel
+                            active={sortConfig.key === 'title'}
+                            direction={sortConfig.direction}
+                            onClick={() => handleSortRequest('title')}
+                        >
+                        Título
+                        </TableSortLabel>
+                    <TableSortLabel
+                            active={sortConfig.key === 'authors'}
+                            direction={sortConfig.direction}
+                            onClick={() => handleSortRequest('authors')}
+                        >
+                        Autores
+                        </TableSortLabel>
+                    <TableSortLabel
+                            active={sortConfig.key === 'area'}
+                            direction={sortConfig.direction}
+                            onClick={() => handleSortRequest('area')}
+                        >
+                        Área
+                    </TableSortLabel>
+                    <TableSortLabel
+                            active={sortConfig.key === 'total_pages'}
+                            direction={sortConfig.direction}
+                            onClick={() => handleSortRequest('total_pages')}
+                        >
+                        Páginas
+                    </TableSortLabel>
+                  </Grid>
                 </Grid>
             </Box></Modal>
             <TableContainer component={Box} sx={{ borderRadius: '8px'}}>

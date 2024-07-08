@@ -9,7 +9,7 @@ function Graph() {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await api.get('/papers');
+                const response = await api.get('/papers?page_size=100');
                 const papers = response.data.papers;
 
                 console.log(papers)

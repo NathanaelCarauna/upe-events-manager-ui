@@ -50,7 +50,7 @@ const Dashboard = () => {
                 <Grid item xs={12} sm={4}>
                     <Card>
                         <CardContent>
-                            <Typography variant="h6">Total de Trabalhos</Typography>
+                            <Typography variant="h6">Total de Eventos</Typography>
                             <Typography variant="h3">{quantidadeTrabalhos}</Typography>
                         </CardContent>
                     </Card>
