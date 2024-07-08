@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
-   CircularProgress, Box, TablePagination,TableSortLabel, MenuItem, Modal } from '@mui/material';
+   CircularProgress, Box, TablePagination,TableSortLabel, MenuItem, Modal, InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 
 function PapersList (props) {
   const [papers, setPapers] = useState([]);
@@ -33,6 +34,13 @@ function PapersList (props) {
 
   const handleChangePage = (event,newPage) => {
     setPage(newPage);
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Evita o comportamento padrão do Enter
+      fetchPapers();
+    }
   };
 
   const clearParams = () => {
@@ -159,8 +167,16 @@ useEffect (() => {
                                   InputLabelProps={{
                                       shrink: true,
                                   }}
+                                  InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment position="end">
+                                        <SearchIcon />
+                                      </InputAdornment>
+                                    ),
+                                  }}
                                   value={search}
                                   onChange={(e) => setSearch(e.target.value)}
+                                  onKeyDown={handleKeyDown}
                             />
                     </Grid>
                     <Grid item xs={12} sm={6} md={0.5} container justifyContent="center" alignItems="center">
@@ -179,7 +195,7 @@ useEffect (() => {
                                 alignItems: 'center',
                                 padding: '8px',
                             }}
-                            onClick={fetchPapers}
+                            onClick={handleOpen}
                         >
                             <FilterAltIcon sx={{ color: '#1C3C78' }} />
                         </Button>
