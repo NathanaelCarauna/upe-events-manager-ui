@@ -1,7 +1,8 @@
 import { BrowserRouter as Router,Routes,Route,Link } from 'react-router-dom';
 import * as React from 'react';
-import Dashboard from './pages/Dashboard'
-import Eventos from './pages/Eventos'
+import Dashboard from './pages/Dashboard';
+import Eventos from './pages/Eventos';
+import DadosEvento from './pages/DadosEvento';
 import Papers from './pages/Papers';
 import Navbar from './components/Navbar';
 import "react-toastify/dist/ReactToastify.css";
@@ -19,6 +20,7 @@ function App() {
           <Route path='/' element={<Dashboard/>} />
           <Route path='/eventos' element={<Eventos/>} />
           <Route path='/papers' element={<Papers/>} />
+          <Route path='/dados-eventos/:event_id' element={<DadosEvento/>} />
         </Routes>
       </Router>
       <Footer/>

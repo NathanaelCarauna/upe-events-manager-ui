@@ -10,10 +10,8 @@ const Dashboard = () => {
     useEffect(() => {
         const buscarQuantidadeTrabalhos = async () => {
             try {
-                //const response = await api.get(`/endpoint-trabalhos`); 
-                //const {totalTrabalhos} = response.data; 
-                //setQuantidadeTrabalhos(totalTrabalhos);
-                setQuantidadeTrabalhos(123);
+                const response = await api.get('/events'); 
+                setQuantidadeTrabalhos(response.data.total_events);
             } catch (erro) {
                 console.error('Erro ao buscar a quantidade de trabalhos:', erro);
             }
