@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
-    CircularProgress, Box, TablePagination,TableSortLabel, Modal } from '@mui/material';
+    CircularProgress, Box, TablePagination,TableSortLabel, Modal, InputAdornment } from '@mui/material';
 import ModalPapers from '../components/ModalPapers';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
+import SearchIcon from '@mui/icons-material/Search';
 
 function Eventos() {
     const [events, setEvents] = useState([]);
@@ -91,6 +92,13 @@ function Eventos() {
         setSortConfig({ key, direction });
     };
 
+    const handleKeyDown = (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault(); // Evita o comportamento padrão do Enter
+          fetchEvents();
+        }
+      };
+
     return (
         <Box sx={{ pt: 5, pb: 2, pl: 10, pr: 10 }}>
             <Box sx={{ backgroundColor: '#fff', borderRadius: '20px', p: 3, mb: 3 }}>
@@ -120,11 +128,20 @@ function Eventos() {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
+                                InputProps={{
+                                    endAdornment: (
+                                      <InputAdornment position="end">
+                                        <SearchIcon />
+                                      </InputAdornment>
+                                    ),
+                                  }}
                                 value={nome}
                                 onChange={(e) => setNome(e.target.value)}
+                                onKeyDown={handleKeyDown}
                             />
                         </Grid>
                         <Grid item xs={12} sm={6} md={0.5} container justifyContent="center" alignItems="center">
+                        
                         <Button
                             variant="contained"
                             sx={{
@@ -140,7 +157,7 @@ function Eventos() {
                                 alignItems: 'center',
                                 padding: '8px',
                             }}
-                            onClick={fetchEvents}
+                            onClick={handleOpen}
                         >
                             <FilterAltIcon sx={{ color: '#1C3C78' }} />
                         </Button>
