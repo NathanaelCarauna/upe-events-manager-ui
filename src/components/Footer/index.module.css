@@ -1,29 +1,21 @@
 .footer_bar {
-    background-color: #1A2D57;    
-
+    background-color: var(--mui-palette-primary-main);
+    color: var(--mui-palette-primary-contrastText);
+    padding: 10px 20px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
-    left: 0;
-    bottom: 0;
-    width: 100%;            
-    color: white;
 }
 
 .footer_logo {
-    width: 250px;    
+    width: 100px;
 }
 
-.info_box{
-    max-width: 390px;
-    text-align: left;
-
+.info_box {
+    text-align: right;
+    font-size: 14px;
 }
 
-.info_box span{
+.info_title {
     display: block;
-}
-
-.info_title{
-    font-weight: bold;
 }

@@ -4,19 +4,24 @@ import api from '../../services/api';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
    CircularProgress, Box, TablePagination,TableSortLabel, MenuItem } from '@mui/material';
 
+import { useTheme } from '@mui/material/styles';
+
+
+
 function PapersList (props) {
-  const [papers, setPapers] = useState([]);
-  const [events, setEvents] = useState([]);
-  const [areas, setAreas] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-  const [search,setSearch] = useState(null);
-  const [area,setArea] = useState(null);
-  const [eventId,setEventId] = useState(null);
-  const [page,setPage] = useState(0);
-  const [rowsPerPage,setRowsPerPage] = useState(10);
-  const [papersCount,setPapersCount] = useState(0);
-  const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' });
+    const theme = useTheme();
+    const [papers, setPapers] = useState([]);
+    const [events, setEvents] = useState([]);
+    const [areas, setAreas] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [search,setSearch] = useState(null);
+    const [area,setArea] = useState(null);
+    const [eventId,setEventId] = useState(null);
+    const [page,setPage] = useState(0);
+    const [rowsPerPage,setRowsPerPage] = useState(10);
+    const [papersCount,setPapersCount] = useState(0);
+    const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' });
 
   const handleRowsPerPage = (event) => {
     setRowsPerPage(+event.target.value);
@@ -35,35 +40,30 @@ function PapersList (props) {
     setSortConfig({ key: 'id', direction: 'asc' });
   };
 
-
   const fetchPapers = async () => {
     setLoading(true);
-    let event_id = null;
-    if(props.eventModal){
-      event_id = props.event_id;      
-    }else{
-      event_id = eventId;
-    }
-    api.get('/papers',{ 
-      params: {
-        search,
-        area,
-        event_id,
-        sort_by: sortConfig.key,
-        sort_direction: sortConfig.direction,
-        page: page + 1,
-        page_size: rowsPerPage,
-      }
-    }).then((response) => {
-      setPapers(response.data.papers);
+    let event_id = props.eventModal ? props.event_id : eventId;
+
+    try {
+        const response = await api.get('/papers', {
+        params: {
+          search: search ,
+          area: area,
+          event_id: event_id,
+          sort_by: sortConfig.key,
+          sort_direction: sortConfig.direction,
+          page: page + 1,
+          page_size: rowsPerPage,
+        }
+      });
+        setPapers(response.data.papers);
+      setPapersCount(response.data.total_papers);
       setLoading(false);
-      setPapersCount(response.data.total_papers)
-    }).catch((error) => {
+    } catch (error) {
       setError(error);
       setLoading(false);
-    })
+    }
 };
-
 
 const fetchEvents = async () => {
   try {
@@ -87,31 +87,6 @@ const fetchAreas = async () => {
 useEffect (() => {
   fetchPapers();
 },[page, rowsPerPage, sortConfig]);
-
-/*
-  useEffect (() => {  
-    console.log("useEffect");
-    const filters = {};
-    filters.page = 1;
-    filters.page_size = rowsPerPage;
-    if(props.eventModal) filters.event_id = props.event_id;
-    fetchPapers(filters);
-  },[rowsPerPage]);
-
-  useEffect (() => {  
-    console.log("useEffect");
-    const filters = {};
-
-    filters.page = page + 1;
-    filters.page_size = rowsPerPage;
-
-    if(props.eventModal) filters.event_id = props.event_id;
-
-    if (eventId) filters.event_id = eventId;
-    if (area) filters.area = area;
-    if (search) filters.search = search;
-    fetchPapers(filters);
-  },[sortConfig]);*/
 
   const handleSortRequest = (key) => {
       let direction = 'asc';

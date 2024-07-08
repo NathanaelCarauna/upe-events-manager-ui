@@ -1,21 +1,42 @@
-import * as React from "react";
-import styles from "./index.module.css";
-import logo from "../../images/pernambuco_logo.png";
+import React from "react";
+import { Box, Typography, useTheme } from "@mui/material";
+import useStyles from "./index.module.css";
+import logoPernambuco from "../../images/pernambuco_logo.png";
+import logoUpe from "../../images/logo_upe.png";
 
 export default function Footer() {
+  const theme = useTheme();
+  const classes = useStyles;
+
   return (
-    <div className={styles.footer_bar}>
-      <a href="/">
-        <img src={logo} className={styles.footer_logo} alt="logo" />
-      </a>
-      <div className={styles.info_box}>
-        <span className={styles.info_title}>Universidade de Pernambuco</span>
-        <span className={styles.info_title}>Campus Garanhuns</span>
-        <span>
-          R. Cap. Pedro Rodrigues - São José, Garanhuns - PE CEP: 55294-902 |
-          Fone: (87) 3761-8227
-        </span>
-      </div>
-    </div>
+      <Box
+          className={classes.footer_bar}
+          sx={{
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.text.primary,
+              padding: theme.spacing(1),
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'left',
+          }}
+      >
+          <a href="/">
+              <img src={logoPernambuco} className={classes.footer_logo_governo} alt="logo"/>
+          </a>
+          <a href="/">
+              <img src={logoUpe} className={classes.footer_logo_upe} alt="logo"/>
+          </a>
+          <Box className={classes.info_box}>
+              <Typography variant="body2" className={classes.info_title}>
+                  Universidade de Pernambuco
+              </Typography>
+              <Typography variant="body2" className={classes.info_title}>
+                  Campus Garanhuns
+              </Typography>
+              <Typography variant="body2">
+                  R. Cap. Pedro Rodrigues - São José, Garanhuns - PE CEP: 55294-902 | Fone: (87) 3761-8227
+              </Typography>
+          </Box>
+      </Box>
   );
 }
