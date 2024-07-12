@@ -11,6 +11,7 @@ import PrintIcon from '@mui/icons-material/Print';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import styles from "../components/PapersList/index.module.css";
+import Divider from '@mui/material/Divider';
 
 function Eventos() {
     const [events, setEvents] = useState([]);
@@ -72,15 +73,6 @@ function Eventos() {
             setError(err);
             setLoading(false);
         }
-    };
-
-    const clearFields = () => {
-        setNome(null);
-        setPromovidoPor(null);
-        setDataInicio(null);
-        setDataFim(null);
-        setPage(1);
-        setSortConfig({ key: 'id', direction: 'asc' });
     };
 
     const formatar_backend = (date) => {
@@ -177,143 +169,71 @@ function Eventos() {
                 aria-labelledby="parent-modal-title"
                 aria-describedby="parent-modal-description"
             >
-                <Box component="form" sx={{ mb: 3, pb: 1 ,position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 1000,
-                    bgcolor: 'background.paper',
-                    border: '2px solid #000',
-                    boxShadow: 24,
-                    pt: 2,
-                    px: 4,
-                    pb: 3,}}>
+                <Box
+                    component="form"
+                    sx={{
+                        mb: 3,
+                        pb: 1,
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                        width: 1000,
+                        bgcolor: '#D9D9D9',
+                        border: '2px solid #323232',
+                        boxShadow: 24,
+                        pt: 2,
+                        px: 4,
+                        pb: 3,
+                        borderRadius: 5,
+                    }}
+                >
+                    <Typography variant="h6" sx={{ color: '#1C3C78', pb: 2 }}>
+                        Filtros
+                    </Typography>
+                    <Divider sx={{ mb: 2, bgcolor: '#1C3C78' }} />
                     <Grid container spacing={3} justifyContent="center" sx={{ pb: 1 }}>
-                        <Grid item xs={12} sm={6} md={6}>
-                            <TextField
-                                fullWidth
-                                label="Nome"
-                                sx={{ backgroundColor: '#f0f0f0' }}
-                                variant="outlined"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                value={nome}
-                                onChange={(e) => setNome(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={6}>
-                            <TextField
-                                fullWidth
-                                sx={{ backgroundColor: '#f0f0f0' }}
-                                label="Promovido Por"
-                                variant="outlined"
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                                value={promovidoPor}
-                                onChange={(e) => setPromovidoPor(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <TextField
-                                fullWidth
-                                sx={{ backgroundColor: '#f0f0f0' }}
-                                label="Data de Início"
-                                variant="outlined"
-                                type="date"
-                                InputLabelProps={{
-                                    shrink: true
-                                }}
-                                value={dataInicio}
-                                onChange={(e) => setDataInicio(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={4}>
-                            <TextField
-                                fullWidth
-                                sx={{ backgroundColor: '#f0f0f0' }}
-                                label="Data de Fim"
-                                variant="outlined"
-                                type="date"
-                                InputLabelProps={{
-                                    shrink: true
-                                }}
-                                value={dataFim}
-                                onChange={(e) => setDataFim(e.target.value)}
-                            />
-                        </Grid>
-                        <Grid item xs={12} sm={6} md={2} container justifyContent="center" alignItems="center">
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                sx={{
-                                    width: '95%',
-                                    height: '85%',
-                                    backgroundColor: '#1976d2',
-                                    '&:hover': {
-                                        backgroundColor: '#0c78f3',
-                                    },
-                                }}
-                                onClick={fetchEvents}
+                        <Grid item xs={12} sm={6} md={6} container justifyContent="center" alignItems="center">
+                            <TableSortLabel
+                                active={sortConfig.key === 'name'}
+                                direction={sortConfig.direction}
+                                onClick={() => requestSort('name')}
+                                sx={{ fontWeight: 'bold' }} 
                             >
-                                Filtrar
-                            </Button>
+                                Nome
+                            </TableSortLabel>
                         </Grid>
-                        <Grid item xs={12} sm={6} md={2} container justifyContent="center" alignItems="center">
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                sx={{
-                                    width: '95%',
-                                    height: '85%',
-                                    backgroundColor: '#1976d2',
-                                    '&:hover': {
-                                        backgroundColor: '#0c78f3',
-                                    },
-                                }}
-                                onClick={clearFields}
+                        <Grid item xs={12} sm={6} md={6} container justifyContent="center" alignItems="center">
+                            <TableSortLabel
+                                active={sortConfig.key === 'promoted_by'}
+                                direction={sortConfig.direction}
+                                onClick={() => requestSort('promoted_by')}
+                                sx={{ fontWeight: 'bold' }} 
                             >
-                                Limpar Filtros
-                            </Button>
-
+                                Promovido Por
+                            </TableSortLabel>
                         </Grid>
-
-                        <Grid item xs={12} sm={6} md={2} container justifyContent="center" alignItems="center">
-                                    <TableSortLabel
-                                            active={sortConfig.key === 'name'}
-                                            direction={sortConfig.direction}
-                                            onClick={() => requestSort('name')}
-                                        >
-                                        Nome
-                                        </TableSortLabel>
-                                    <TableSortLabel
-                                            active={sortConfig.key === 'promoted_by'}
-                                            direction={sortConfig.direction}
-                                            onClick={() => requestSort('promoted_by')}
-                                        >
-                                        Promovido Por
-                                        </TableSortLabel>
-                                    <TableSortLabel
-                                            active={sortConfig.key === 'initial_date'}
-                                            direction={sortConfig.direction}
-                                            onClick={() => requestSort('initial_date')}
-                                        >
-                                        Data Inicial
-                                        </TableSortLabel>
-                                    <TableSortLabel
-                                            active={sortConfig.key === 'final_date'}
-                                            direction={sortConfig.direction}
-                                            onClick={() => requestSort('final_date')}
-                                        >
-                                        Data Final
-                                        </TableSortLabel>
+                        <Grid item xs={12} sm={6} md={6} container justifyContent="center" alignItems="center">
+                            <TableSortLabel
+                                active={sortConfig.key === 'initial_date'}
+                                direction={sortConfig.direction}
+                                onClick={() => requestSort('initial_date')}
+                                sx={{ fontWeight: 'bold' }} 
+                            >
+                                Data Inicial
+                            </TableSortLabel>
+                        </Grid>
+                        <Grid item xs={12} sm={6} md={6} container justifyContent="center" alignItems="center">
+                            <TableSortLabel
+                                active={sortConfig.key === 'final_date'}
+                                direction={sortConfig.direction}
+                                onClick={() => requestSort('final_date')}
+                                sx={{ fontWeight: 'bold' }}
+                            >
+                                Data Final
+                            </TableSortLabel>
                         </Grid>
                     </Grid>
-
-                    <Typography variant="body2" color="textSecondary" sx={{ mb: 1, fontSize: '0.80rem' }}>
-                        * Para filtrar por data, informe tanto a data de início como a de fim do evento *
-                    </Typography>
                 </Box>
                 </Modal>
 

@@ -12,6 +12,7 @@ import Stack from '@mui/material/Stack';
 import Pagination from '@mui/material/Pagination';
 import { styled } from '@mui/material/styles';
 import styles from "./index.module.css";
+import Divider from '@mui/material/Divider';
 
 function PapersList (props) {
   const [papers, setPapers] = useState([]);
@@ -190,137 +191,73 @@ useEffect (() => {
                 aria-labelledby="parent-modal-title"
                 aria-describedby="parent-modal-description"
             >
-            <Box component="form" sx={{ mb: 3, pb: 1 }}>
-                <Grid container spacing={3} justifyContent="center" sx={{ pb: 1 ,position: 'absolute',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%)',
-                    width: 1000,
-                    bgcolor: 'background.paper',
-                    border: '2px solid #000',
-                    boxShadow: 24,
-                    pt: 2,
-                    px: 4,
-                    pb: 3,}}>
-                  <Grid item lg={6} md={6} sm={12}>
-                      <TextField
-                              fullWidth
-                              sx={{ backgroundColor: '#f0f0f0' }}
-                              label="Busca"
-                              variant="outlined"
-                              InputLabelProps={{
-                                  shrink: true
-                              }}
-                              value={search}
-                              onChange={(e) => setSearch(e.target.value)}
-                          />
-                    </Grid>
-                      {
-                        !props.eventModal && 
-                        <Grid item lg={3} md={3} sm={6}>
-                          <Select
-                          sx={{ backgroundColor: '#f0f0f0' }}
-                          variant="outlined"
-                          fullWidth
-                          defaultValue=""
-                          value={eventId}
-                          displayEmpty
-                          onChange={(e) => setEventId(e.target.value)}
-                          onOpen={fetchEvents}
-                      >
-                          <MenuItem value=""><em>Selecione um evento</em></MenuItem>
-                          {events.map((event) => (
-                            <MenuItem value={event.id} key={event.id}>
-                              {event.name}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </Grid>
-                      }
-                  <Grid item lg={props.eventModal? 6 : 3} md={props.eventModal? 6 : 3} sm={props.eventModal? 12 : 6}>
-                    <Select
-                        defaultValue=""
-                        value={area}
-                        variant="outlined"
-                        fullWidth
-                        sx={{ backgroundColor: '#f0f0f0' }}
-                        onChange={(e) => setArea(e.target.value)}
-                        onOpen={fetchAreas}
-                      >
-                        <MenuItem value=""><em>Selecione uma área</em></MenuItem>
-                        {areas.map((area) => (
-                          <MenuItem value={area} key={area}>
-                            {area}
-                          </MenuItem>
-                        ))}
-                    </Select>
-                  </Grid>
-                  <Grid item lg={6} md={6} sm={6} container justifyContent="center" alignItems="center">
-                    <Button
-                            variant="contained"
-                            color="primary"
-                            sx={{
-                                width: '95%',
-                                height: '85%',
-                                backgroundColor: '#1976d2',
-                                '&:hover': {
-                                    backgroundColor: '#0c78f3',
-                                },
-                            }}
-                            onClick={fetchPapers}
-                    >
-                            Filtrar
-                    </Button>
-                 </Grid>
-                <Grid item lg={6} md={6} sm={6} container justifyContent="center" alignItems="center">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        sx={{
-                                width: '95%',
-                                height: '85%',
-                                backgroundColor: '#1976d2',
-                                '&:hover': {
-                                    backgroundColor: '#0c78f3',
-                                },
-                            }}
-                        onClick={clearParams}
-                    >
-                        Limpar Filtros
-                    </Button>
-                  </Grid>
-                  <Grid item xs={12} sm={6} md={2} container justifyContent="center" alignItems="center">
+            <Box
+            component="form"
+            sx={{
+                mb: 3,
+                pb: 1,
+                position: 'absolute',
+                top: '50%',
+                left: '50%',
+                transform: 'translate(-50%, -50%)',
+                width: 1000,
+                bgcolor: '#D9D9D9',
+                border: '2px solid #323232',
+                boxShadow: 24,
+                pt: 2,
+                px: 4,
+                pb: 3,
+                borderRadius: 5,
+            }}
+        >
+            <Typography variant="h6" sx={{ color: '#1C3C78', pb: 2 }}>
+                Filtros
+            </Typography>
+            <Divider sx={{ mb: 2, bgcolor: '#1C3C78' }} />
+            <Grid container spacing={3} justifyContent="center" sx={{ pb: 1 }}>
+                <Grid item xs={12} sm={6} md={6} container justifyContent="center" alignItems="center">
                     <TableSortLabel
-                            active={sortConfig.key === 'title'}
-                            direction={sortConfig.direction}
-                            onClick={() => handleSortRequest('title')}
-                        >
+                        active={sortConfig.key === 'title'}
+                        direction={sortConfig.direction}
+                        onClick={() => handleSortRequest('title')}
+                        sx={{ fontWeight: 'bold' }}
+                    >
                         Título
-                        </TableSortLabel>
+                    </TableSortLabel>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6} container justifyContent="center" alignItems="center">
                     <TableSortLabel
-                            active={sortConfig.key === 'authors'}
-                            direction={sortConfig.direction}
-                            onClick={() => handleSortRequest('authors')}
-                        >
+                        active={sortConfig.key === 'authors'}
+                        direction={sortConfig.direction}
+                        onClick={() => handleSortRequest('authors')}
+                        sx={{ fontWeight: 'bold' }}
+                    >
                         Autores
-                        </TableSortLabel>
+                    </TableSortLabel>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6} container justifyContent="center" alignItems="center">
                     <TableSortLabel
-                            active={sortConfig.key === 'area'}
-                            direction={sortConfig.direction}
-                            onClick={() => handleSortRequest('area')}
-                        >
+                        active={sortConfig.key === 'area'}
+                        direction={sortConfig.direction}
+                        onClick={() => handleSortRequest('area')}
+                        sx={{ fontWeight: 'bold' }}
+                    >
                         Área
                     </TableSortLabel>
+                </Grid>
+                <Grid item xs={12} sm={6} md={6} container justifyContent="center" alignItems="center">
                     <TableSortLabel
-                            active={sortConfig.key === 'total_pages'}
-                            direction={sortConfig.direction}
-                            onClick={() => handleSortRequest('total_pages')}
-                        >
+                        active={sortConfig.key === 'total_pages'}
+                        direction={sortConfig.direction}
+                        onClick={() => handleSortRequest('total_pages')}
+                        sx={{ fontWeight: 'bold' }}
+                    >
                         Páginas
                     </TableSortLabel>
-                  </Grid>
                 </Grid>
-            </Box></Modal>
+            </Grid>
+        </Box>
+            </Modal>
             <TableContainer component={Box} sx={{ borderRadius: '8px'}}>
                 {loading && <CircularProgress />}
                 {error && <Typography color="error" align="center">Erro ao carregar dados: {error.message}</Typography>}
