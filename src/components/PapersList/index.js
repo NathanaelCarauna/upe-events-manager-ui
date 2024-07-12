@@ -34,6 +34,10 @@ function PapersList (props) {
     },
   }));
 
+const paperDetailURL = (id) => {
+    return "dados-paper/" + id;
+};
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -269,29 +273,13 @@ useEffect (() => {
                                     <TableCell style={{ width: "5%", textAlign: 'center'}}><EditIcon/></TableCell>
                                     <TableCell style={{ width: "20%" }}>
                                       <Typography variant="h6">
-                                        Evento:
-                                      </Typography>
-                                      <Typography>
-                                        Evento Teste
-                                      </Typography>
-                                    </TableCell>
-                                    <TableCell style={{ width: "25%", textAlign: 'left' }}>
-                                      <Typography variant="h6">
-                                        Área:
-                                      </Typography>
-                                      <Typography>
-                                        {paper.area}
-                                      </Typography>
-                                    </TableCell>
-                                    <TableCell style={{ width: "22%", textAlign: 'left' }}>
-                                      <Typography variant="h6">
                                         Título
                                       </Typography>
                                       <Typography>
                                         {paper.title}
                                       </Typography>
                                     </TableCell>
-                                    <TableCell style={{ width: "22%", textAlign: 'left' }}>
+                                    <TableCell style={{ width: "25%", textAlign: 'left' }}>
                                       <Typography variant="h6">
                                         Autor principal:
                                       </Typography>
@@ -299,7 +287,27 @@ useEffect (() => {
                                         {paper.authors}
                                       </Typography>
                                     </TableCell>
-                                    <TableCell style={{ width: "3%", textAlign: 'center'}}><VisibilityIcon/></TableCell>
+                                    <TableCell style={{ width: "22%", textAlign: 'left' }}>
+                                      <Typography variant="h6">
+                                        Evento:
+                                      </Typography>
+                                      <Typography>
+                                        Evento Teste
+                                      </Typography>
+                                    </TableCell>
+                                    <TableCell style={{ width: "20%", textAlign: 'left' }}>
+                                      <Typography variant="h6">
+                                        Área:
+                                      </Typography>
+                                      <Typography>
+                                        {paper.area}
+                                      </Typography>
+                                    </TableCell>
+                                    <TableCell style={{ width: "3%", textAlign: 'center'}}>
+                                      <a href={paperDetailURL(paper.id)}>
+                                        <VisibilityIcon/>
+                                      </a>
+                                    </TableCell>
                                     <TableCell style={{ width: "3%", textAlign: 'center'}}><PrintIcon/></TableCell>
                                   </StyledTableRow>
                             ))}

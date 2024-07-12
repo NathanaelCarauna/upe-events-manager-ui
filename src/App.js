@@ -8,6 +8,7 @@ import Navbar from './components/Navbar';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Footer from './components/Footer';
+import DadosPaper from './pages/DadosPaper';
 
 
 function App() {
@@ -20,7 +21,8 @@ function App() {
           <Route path='/' element={<Dashboard/>} />
           <Route path='/eventos' element={<Eventos/>} />
           <Route path='/papers' element={<Papers/>} />
-          <Route path='/dados-eventos/:event_id' element={<DadosEvento/>} />
+          <Route path='/dados-evento/:event_id' element={<DadosEvento/>} />
+          <Route path='/dados-paper/:paper_id' element={<DadosPaper/>} />
         </Routes>
       </Router>
       <Footer/>

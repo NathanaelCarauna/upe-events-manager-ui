@@ -44,7 +44,7 @@ function Eventos() {
     };
 
     const eventDetailURL = (id) => {
-        return "dados-eventos/" + id;
+        return "dados-evento/" + id;
     };
 
     const fetchEvents = async () => {

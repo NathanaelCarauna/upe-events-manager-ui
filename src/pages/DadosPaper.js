@@ -4,17 +4,23 @@ import api from '../services/api';
 import { useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
-function DadosEvento() {
-  const {event_id} = useParams();
+function DadosPaper() {
+  const{paper_id} = useParams();
   const [evento, setEvento] = useState({
     nome: '',
     organizador: '',
     dataInicio: '',
     dataFim: '',
-    infoSumario: '',
-    nomeAnais: '',
-    arquivoMescladoAnais: '',
-    resumo: ''
+  });
+
+  const [artigo, setArtigo] = useState({
+    titulo: '',
+    autores: '',
+    resumo: '',
+    anoDePublicacao: '',
+    downloadLink: '',
+    area: '',
+    totalPaginas: 0
   });
 
   const [estatisticas, setEstatisticas] = useState({
@@ -28,49 +34,49 @@ function DadosEvento() {
     mediaPaginasPorArtigo: 0
   });
 
-  const [marcos, setMarcos] = useState('');
-  const [diretorio, setDiretorio] = useState('');
+  const [resumo, setResumo] = useState('');
 
-  const fetchEvent = async () => {
+  const fetchPaper = async () => {
     try {
-      const event = await api.get('/events/' + event_id);
+        //ROTA QUEBRADA
+        //const paper = await api.get('/papers/' + paper_id);
+        //const event = await api.get('/events/' + paper.data.event_id);
+
+        //console.log(paper)
+        //console.log(event)
 
       /*Pendencias:
 
       NÃO TEMOS:
-        diretório de arquivos do evento
-        informação do sumário
-        nome do anal do evento
-        nome do arquivo de anal após merge de papers
         resumo
-        marcos
-        quantitativo de artigos submetidos
-        quantitativo de artigos aceitos
-        quantiativo de autores aceitos
+        ano de publicação
 
 
-      TEMOS MAS SERIA BOM TER EM UMA ROTA:
-        quantitativo de artigos por area de conhecimento
-        quantitativo de páginas do anal do evento
-        quantitativo médio de páginas do anal dos artigos
-      
-        organizadores do evento (promoted_by?)
+      VAMOS TER ESSAS ESTATÍSTICAS?
 
       */
 
-      setEvento({
-        nome: event.data.name,
-        organizador: event.data.promoted_by,
-        dataInicio: event.data.initial_date,
-        dataFim: event.data.final_date,
-      });
+      /*
+
+        setEvento({
+            nome: event.data.name,
+            organizador: event.data.promoted_by,
+            dataInicio: event.data.initial_date,
+            dataFim: event.data.final_date,
+         });
+
+        setArtigo({
+            titulo: paper.data.title,
+            autores: paper.data.authors,
+            downloadLink: paper.data.pdf_download_link,
+            area: paper.data.area,
+            totalPaginas : paper.data.total_pages,
+        });
+        
+    */
 
       /* Melhorias futuras
       const dadosEstatisticas = await api.get('/estatisticas-evento');
-      const respostaMarcos = await api.get('/events/marcos'); 
-      const diretorio = await api.get('/diretorio');
-      setMarcos(respostaMarcos.data);
-      setDiretorio(diretorio.data.diretorio);
       setEstatisticas({
         artigosSubmetidos: dadosEstatisticas.data.artigosSubmetidos,
         artigosAceitos: dadosEstatisticas.data.artigosAceitos,
@@ -89,7 +95,7 @@ function DadosEvento() {
 
 
   useEffect(() => {
-    fetchEvent();
+    fetchPaper();
   }, []);
 
   return (
@@ -99,42 +105,39 @@ function DadosEvento() {
           <Typography>Voltar</Typography>
       </a>
       <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h5" pb='16px'>Informações do Evento</Typography>
+        <Typography variant="h5" pb='16px'>Informações do Artigo</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Nome do Evento:</strong> {evento.nome}</Typography>
+            <Typography variant="body1"><strong>Título do Artigo:</strong> {artigo.titulo}</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Instituição Organizadora:</strong> {evento.organizador}</Typography>
+            <Typography variant="body1"><strong>Autores:</strong> {artigo.autores}</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Data de Início:</strong> {evento.dataInicio.substring(0, 10)}</Typography>
+            <Typography variant="body1"><strong>Área:</strong> {artigo.area}</Typography>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Data de Fim:</strong> {evento.dataFim.substring(0, 10)}</Typography>
+            <Typography variant="body1"><strong>Evento:</strong> {evento.name}</Typography>
           </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6">Marcos do Evento</Typography>
-            <Typography variant="body1">{marcos}</Typography>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="body1"><strong>Ano de publicação:</strong> {artigo.anoDePublicacao}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="body1"><strong>Link para download:</strong> {artigo.downloadLink}</Typography>
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            <Typography variant="body1"><strong>Total de páginas:</strong> {artigo.totalPaginas}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="h6">Resumo</Typography>
-            <Typography variant="body1">{evento.resumo}</Typography>
+            <Typography variant="body1">{resumo}</Typography>
           </Grid>
         </Grid>
       </Paper>
 
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h5" pb='16px'>Informações dos Anais</Typography>
-        <Typography variant="h6">Diretório de Arquivos do Evento (Somente Admin)</Typography>
-        <Typography variant="body1">{diretorio}</Typography>
-        <Typography variant="body1"><strong>Sumário</strong> {evento.infoSumario}</Typography>
-        <Typography variant="body1"><strong>Nome:</strong> {evento.nomeAnais}</Typography>
-        <Typography variant="body1"><strong>Nome do Arquivo de Anais após mescla de Artigos:</strong> {evento.arquivoMescladoAnais}</Typography>
-      </Paper>
 
       <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h5" pb='16px'>Estatísticas do Evento</Typography>
+        <Typography variant="h5" pb='16px'>Estatísticas do Paper</Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} sm={6}>
             <Typography variant="body1"><strong>Artigos Submetidos:</strong> {estatisticas.artigosSubmetidos}</Typography>
@@ -166,4 +169,4 @@ function DadosEvento() {
   );
 };
 
-export default DadosEvento;
+export default DadosPaper;
