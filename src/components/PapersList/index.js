@@ -7,7 +7,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid,
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import PrintIcon from '@mui/icons-material/Print';
+import DownloadIcon from '@mui/icons-material/Download';
 import Stack from '@mui/material/Stack';
 import Pagination from '@mui/material/Pagination';
 import { styled } from '@mui/material/styles';
@@ -270,7 +270,11 @@ useEffect (() => {
                         <TableBody>
                             {Array.isArray(papers) && papers.map((paper) => (
                                 <StyledTableRow key={paper.id}>
-                                    <TableCell style={{ width: "5%", textAlign: 'center'}}><EditIcon/></TableCell>
+                                    <TableCell style={{ width: "5%", textAlign: 'center'}}>
+                                      <a href="#">
+                                        <EditIcon/>
+                                      </a>
+                                    </TableCell>
                                     <TableCell style={{ width: "20%" }}>
                                       <Typography variant="h6">
                                         Título
@@ -308,7 +312,10 @@ useEffect (() => {
                                         <VisibilityIcon/>
                                       </a>
                                     </TableCell>
-                                    <TableCell style={{ width: "3%", textAlign: 'center'}}><PrintIcon/></TableCell>
+                                    <TableCell style={{ width: "3%", textAlign: 'center'}}>
+                                      <a href={paper.pdf_download_link} target="_blank" rel="noopener noreferrer" download>
+                                        <DownloadIcon/>
+                                      </a></TableCell>
                                   </StyledTableRow>
                             ))}
                         </TableBody>

@@ -100,7 +100,7 @@ function DadosPaper() {
 
   return (
     <Container sx={{ pt: 5, pb: 5 }}>
-      <a href="/eventos" style={{display:"flex", marginBottom: "5%"}}>
+      <a href="/papers" style={{display:"flex", marginBottom: "5%"}}>
           <ArrowBackIcon/> 
           <Typography>Voltar</Typography>
       </a>

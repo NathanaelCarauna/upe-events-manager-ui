@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
-    CircularProgress, Box,TableSortLabel, Modal, InputAdornment, MenuItem } from '@mui/material';
+    CircularProgress, Box,TableSortLabel, Modal, InputAdornment, MenuItem, Menu } from '@mui/material';
     import Stack from '@mui/material/Stack';
 import Pagination from '@mui/material/Pagination';
 import { styled } from '@mui/material/styles';
 import EditIcon from '@mui/icons-material/Edit';
 import VisibilityIcon from '@mui/icons-material/Visibility';
-import PrintIcon from '@mui/icons-material/Print';
+import DownloadIcon from '@mui/icons-material/Download';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import styles from "../components/PapersList/index.module.css";
@@ -45,6 +45,48 @@ function Eventos() {
 
     const eventDetailURL = (id) => {
         return "dados-evento/" + id;
+    };
+
+    const DownloadCell = ({ event }) => {
+        const [anchorEl, setAnchorEl] = React.useState(null);
+        const open = Boolean(anchorEl);
+        const handleClick = (event) => {
+            setAnchorEl(event.currentTarget);
+        };
+        const handleClose = () => {
+            setAnchorEl(null);
+        };
+
+        return (
+            <div>
+            
+            <a href="#" onClick={handleClick}>
+                   <DownloadIcon />
+            </a>
+            <Menu
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                
+            >
+                <MenuItem onClick={handleClose}>
+                    <a href={event.summary_download_link} target="_blank" rel="noopener noreferrer" download>
+                        Sumário 
+                    </a>
+                </MenuItem>
+                <MenuItem onClick={handleClose}>
+                    <a href={event.merged_papers_download_link} target="_blank" rel="noopener noreferrer" download>
+                        Papers
+                    </a>
+                </MenuItem>
+                <MenuItem onClick={handleClose} style={{ display: 'flex', alignItems: 'center' }}>
+                    <a href={event.anais_download_link} target="_blank" rel="noopener noreferrer" download>
+                        Anais
+                    </a>
+                </MenuItem>
+            </Menu>
+            </div>
+        );
     };
 
     const fetchEvents = async () => {
@@ -245,7 +287,11 @@ function Eventos() {
                             <TableBody>
                                 {events.map((event) => (
                                 <StyledTableRow key={event.id}>
-                                    <TableCell style={{ width: "5%", textAlign: 'center'}}><EditIcon/></TableCell>
+                                    <TableCell style={{ width: "5%", textAlign: 'center'}}>
+                                        <a href="#">
+                                            <EditIcon/>
+                                        </a>
+                                    </TableCell>
                                     <TableCell style={{ width: "20%" }}>
                                     <Typography variant="h6">
                                         Nome:
@@ -283,7 +329,9 @@ function Eventos() {
                                             <VisibilityIcon/>
                                         </a>
                                     </TableCell>
-                                    <TableCell style={{ width: "3%", textAlign: 'center'}}><PrintIcon/></TableCell>
+                                    <TableCell style={{ width: "3%", textAlign: 'center'}}>
+                                        <DownloadCell event={event} />
+                                    </TableCell>
                                 </StyledTableRow>
                                 ))}
                             </TableBody>
