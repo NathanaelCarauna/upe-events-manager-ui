@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import api from '../services/api';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
-    CircularProgress, Box,TableSortLabel, Modal, InputAdornment, MenuItem, Menu } from '@mui/material';
+    CircularProgress, Box,TableSortLabel, Modal, InputAdornment, MenuItem, Menu,Tooltip } from '@mui/material';
     import Stack from '@mui/material/Stack';
 import Pagination from '@mui/material/Pagination';
 import { styled } from '@mui/material/styles';
@@ -28,7 +28,7 @@ function Eventos() {
 
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
-          backgroundColor: theme.palette.action.hover,
+          backgroundColor: '#D9D9D9',
         },
       }));
 
@@ -59,10 +59,12 @@ function Eventos() {
 
         return (
             <div>
-            
-            <a href="#" onClick={handleClick}>
-                   <DownloadIcon />
-            </a>
+
+            <Tooltip title="Baixar arquivos do evento" arrow>
+                <a href="#" onClick={handleClick}>
+                    <DownloadIcon />
+                </a>
+            </Tooltip>
             <Menu
                 anchorEl={anchorEl}
                 open={open}
@@ -277,20 +279,22 @@ function Eventos() {
                         </Grid>
                     </Grid>
                 </Box>
-                </Modal>
+            </Modal>
 
                 <TableContainer component={Box} sx={{ borderRadius: '8px'}}>
                     {loading && <CircularProgress />}
                     {error && <Typography color="error" align="center">Erro ao carregar dados: {error.message}</Typography>}
                     {!loading && !error && (
-                        <Table>
+                        <Table sx = {{borderCollapse: 'separate', borderSpacing: '0px 15px'}}>
                             <TableBody>
                                 {events.map((event) => (
-                                <StyledTableRow key={event.id}>
+                                <StyledTableRow key={event.id} sx = {{backgroundColor: '#EDEDED'}}>
                                     <TableCell style={{ width: "5%", textAlign: 'center'}}>
-                                        <a href="#">
-                                            <EditIcon/>
-                                        </a>
+                                        <Tooltip title="Editar evento" arrow>
+                                            <a href="#">
+                                                <EditIcon/>
+                                            </a>
+                                        </Tooltip>
                                     </TableCell>
                                     <TableCell style={{ width: "20%" }}>
                                     <Typography variant="h6">
@@ -325,9 +329,11 @@ function Eventos() {
                                     </Typography>
                                     </TableCell>
                                     <TableCell style={{ width: "3%", textAlign: 'center'}}>
-                                        <a href={eventDetailURL(event.id)}>
-                                            <VisibilityIcon/>
-                                        </a>
+                                        <Tooltip title="Informações do evento" arrow>
+                                            <a href={eventDetailURL(event.id)}>
+                                                <VisibilityIcon/>
+                                            </a>
+                                        </Tooltip>
                                     </TableCell>
                                     <TableCell style={{ width: "3%", textAlign: 'center'}}>
                                         <DownloadCell event={event} />

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import api from '../../services/api';
 import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid, Typography, Select, Button, TextField,
-   CircularProgress, Box, TablePagination,TableSortLabel, MenuItem, Modal, InputAdornment, 
+   CircularProgress, Box, Tooltip,TableSortLabel, MenuItem, Modal, InputAdornment, 
    Tab} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import EditIcon from '@mui/icons-material/Edit';
@@ -30,7 +30,7 @@ function PapersList (props) {
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
-      backgroundColor: theme.palette.action.hover,
+      backgroundColor: '#D9D9D9',
     },
   }));
 
@@ -115,7 +115,7 @@ const fetchAreas = async () => {
 
 useEffect (() => {
   fetchPapers();
-},[page, sortConfig]);
+},[page, sortConfig,eventId,area]);
 
   const handleSortRequest = (key) => {
       let direction = 'asc';
@@ -218,6 +218,47 @@ useEffect (() => {
                 Filtros
             </Typography>
             <Divider sx={{ mb: 2, bgcolor: '#1C3C78' }} />
+
+            <Grid container spacing={3} justifyContent="center" sx={{ pb: 2 }}>
+              {
+                !props.eventModal && 
+                <Grid item lg={6} md={6} sm={6}>
+                  <Select
+                  sx={{ backgroundColor: '#D9D9D9' }}
+                  variant="outlined"
+                  fullWidth
+                  defaultValue=""
+                  value={eventId}
+                  displayEmpty
+                  onChange={(e) => setEventId(e.target.value)}
+                  onOpen={fetchEvents}
+              >
+                  {events.map((event) => (
+                    <MenuItem value={event.id} key={event.id}>
+                      {event.name}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </Grid>
+              }
+              <Grid item lg={props.eventModal? 12 : 6} md={props.eventModal? 12 : 6} sm={props.eventModal? 12 : 6}>
+                <Select
+                    defaultValue=""
+                    value={area}
+                    variant="outlined"
+                    fullWidth
+                    sx={{ backgroundColor: '#D9D9D9' }}
+                    onChange={(e) => setArea(e.target.value)}
+                    onOpen={fetchAreas}
+                  >
+                    {areas.map((area) => (
+                      <MenuItem value={area} key={area}>
+                        {area}
+                      </MenuItem>
+                    ))}
+                </Select>
+              </Grid>
+            </Grid>
             <Grid container spacing={3} justifyContent="center" sx={{ pb: 1 }}>
                 <Grid item xs={12} sm={6} md={6} container justifyContent="center" alignItems="center">
                     <TableSortLabel
@@ -266,17 +307,19 @@ useEffect (() => {
                 {loading && <CircularProgress />}
                 {error && <Typography color="error" align="center">Erro ao carregar dados: {error.message}</Typography>}
                 {!loading && !error && (
-                    <Table>
+                    <Table sx = {{borderCollapse: 'separate', borderSpacing: '0px 15px'}}>
                         <TableBody>
                             {Array.isArray(papers) && papers.map((paper) => (
-                                <StyledTableRow key={paper.id}>
+                                <StyledTableRow key={paper.id} sx = {{backgroundColor: '#EDEDED'}}>
                                     <TableCell style={{ width: "5%", textAlign: 'center'}}>
-                                      <a href="#">
-                                        <EditIcon/>
-                                      </a>
+                                      <Tooltip title="Editar artigo" arrow>
+                                        <a href="#">
+                                          <EditIcon/>
+                                        </a>
+                                      </Tooltip>
                                     </TableCell>
                                     <TableCell style={{ width: "20%" }}>
-                                      <Typography variant="h6">
+                                      <Typography variant="h6" className= {styles.textStyle}>
                                         Título
                                       </Typography>
                                       <Typography>
@@ -308,14 +351,19 @@ useEffect (() => {
                                       </Typography>
                                     </TableCell>
                                     <TableCell style={{ width: "3%", textAlign: 'center'}}>
-                                      <a href={paperDetailURL(paper.id)}>
-                                        <VisibilityIcon/>
-                                      </a>
+                                      <Tooltip title="Informações do artigo" arrow>
+                                        <a href={paperDetailURL(paper.id)}>
+                                          <VisibilityIcon/>
+                                        </a>
+                                      </Tooltip>
                                     </TableCell>
                                     <TableCell style={{ width: "3%", textAlign: 'center'}}>
-                                      <a href={paper.pdf_download_link} target="_blank" rel="noopener noreferrer" download>
-                                        <DownloadIcon/>
-                                      </a></TableCell>
+                                      <Tooltip title="Baixar artigo" arrow>
+                                        <a href={paper.pdf_download_link} target="_blank" rel="noopener noreferrer" download>
+                                          <DownloadIcon/>
+                                        </a>
+                                      </Tooltip>
+                                    </TableCell>
                                   </StyledTableRow>
                             ))}
                         </TableBody>

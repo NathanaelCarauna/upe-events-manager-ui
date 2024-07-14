@@ -94,7 +94,7 @@ function DadosEvento() {
 
   return (
     <Container sx={{ pt: 5, pb: 5 }}>
-      <a href="/eventos" style={{display:"flex", marginBottom: "5%"}}>
+      <a href="/eventos" style={{display:"flex", justifyContent:"start",marginBottom: "2%"}}>
           <ArrowBackIcon/> 
           <Typography>Voltar</Typography>
       </a>
