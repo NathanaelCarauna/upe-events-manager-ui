@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Grid,
 import Stack from '@mui/material/Stack';
 import Pagination from '@mui/material/Pagination';
 import ModalPapers from '../components/ModalPapers';
+import FiltrosAplicados from '../components/FiltrosAplicados';
 
 function Eventos() {
     const [events, setEvents] = useState([]);
@@ -19,6 +20,7 @@ function Eventos() {
     const [page, setPage] = useState(0);
     const [rowsPerPage, setRowsPerPage] = useState(1);
     const [eventsCount, setEventsCount] = useState(0);
+    const [filtrosAplicados, setFiltrosAplicados] = useState(false);
 
     const handleRowsPerPage = (event) => {
         setRowsPerPage(+event.target.value);
@@ -35,6 +37,8 @@ function Eventos() {
         var final_date = null;
         if (dataInicio) initial_date = formatar_backend(dataInicio);
         if (dataFim) final_date = formatar_backend(dataFim);
+        if (nome || promovidoPor || dataInicio || dataFim) setFiltrosAplicados(true);
+        else setFiltrosAplicados(false);
         try {
             const response = await api.get('/events', {
                 params: {
@@ -64,6 +68,34 @@ function Eventos() {
         setDataFim(null);
         setPage(0);
         setSortConfig({ key: 'id', direction: 'asc' });
+        setFiltrosAplicados(false);
+    };
+
+    const clearSpecificFilter = (filterKey) => {
+        switch (filterKey) {
+            case 'nome':
+                setNome('');
+                setPage(0);
+                setSortConfig({ key: 'id', direction: 'asc' });
+                break;
+            case 'promovidoPor':
+                setPromovidoPor('');
+                setPage(0);
+                setSortConfig({ key: 'id', direction: 'asc' });
+                break;
+            case 'dataInicio':
+                setDataInicio('');
+                setPage(0);
+                setSortConfig({ key: 'id', direction: 'asc' });
+                break;
+            case 'dataFim':
+                setDataFim('');
+                setPage(0);
+                setSortConfig({ key: 'id', direction: 'asc' });
+                break;
+            default:
+                break;
+        }
     };
 
     const formatar_backend = (date) => {
@@ -181,7 +213,15 @@ function Eventos() {
                         * Para filtrar por data, informe tanto a data de início como a de fim do evento *
                     </Typography>
                 </Box>
-
+                {filtrosAplicados && (
+                    <FiltrosAplicados
+                        nome={nome}
+                        promovidoPor={promovidoPor}
+                        dataInicio={dataInicio}
+                        dataFim={dataFim}
+                        limparFiltros={clearSpecificFilter}
+                    />
+                )}
                 <TableContainer component={Box} sx={{ borderRadius: '8px', border: '1px solid #CFCECE' }}>
                     {loading && <CircularProgress />}
                     {error && <Typography color="error" align="center">Erro ao carregar dados: {error.message}</Typography>}
