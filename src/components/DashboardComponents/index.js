@@ -6,12 +6,15 @@ const Dashboard = () => {
     const [quantidadeTrabalhos, setQuantidadeTrabalhos] = useState(0);
     const [quantidadeInscritos, setQuantidadeInscritos] = useState(0);
     const [quantidadeOuvintes, setQuantidadeOuvintes] = useState(0);
+    const [quantidadeEventos, setQuantidadeEventos] = useState(0);
+    const [quantidadeCH, setQuantidadeCH] = useState(0);
 
     useEffect(() => {
         const buscarQuantidadeTrabalhos = async () => {
             try {
-                const response = await api.get('/events'); 
-                setQuantidadeTrabalhos(response.data.total_events);
+                const response = await api.get('/dashboard');
+                console.log(response.data); 
+                setQuantidadeTrabalhos(response.data.total_papers);
             } catch (erro) {
                 console.error('Erro ao buscar a quantidade de trabalhos:', erro);
             }
@@ -19,38 +22,63 @@ const Dashboard = () => {
 
         const buscarQuantidadeInscritos = async () => {
             try {
-                //const response = await api.get(`/endpoint-inscritos`); 
-                //const {totalInscritos} = response.data;
-                //setQuantidadeInscritos(totalInscritos);
-                setQuantidadeInscritos(442);
-            } catch (error) {
-                console.error('Erro ao buscar o número de inscritos:', error);
+                const response = await api.get('/dashboard'); 
+                setQuantidadeInscritos(response.data.total_subscribers);
+            } catch (erro) {
+                console.error('Erro ao buscar a quantidade de trabalhos:', erro);
             }
         };
 
         const buscarQuantidadeOuvintes = async () => {
             try {
-                //const response = await api.get(`/endpoint-ouvintes`);
-                //const {totalOuvintes} = response.data;
-                //setQuantidadeOuvintes(totalOuvintes);
-                setQuantidadeOuvintes(256);
+                const response = await api.get('/dashboard'); 
+                setQuantidadeOuvintes(response.data.total_listeners);
             } catch (erro) {
-                console.error('Erro ao buscar a quantidade de ouvintes:', erro);
+                console.error('Erro ao buscar a quantidade de trabalhos:', erro);
+            }
+        };
+        
+        const buscarQuantidadeEventos = async () => {
+            try {
+                const response = await api.get('/dashboard'); 
+                setQuantidadeEventos(response.data.total_events);
+            } catch (erro) {
+                console.error('Erro ao buscar a quantidade de trabalhos:', erro);
+            }
+        };
+
+        const buscarQuantidadeCH = async () => {
+            try {
+                const response = await api.get('/dashboard'); 
+                setQuantidadeCH(response.data.average_listeners_workload);
+            } catch (erro) {
+                console.error('Erro ao buscar a quantidade de trabalhos:', erro);
             }
         };
 
         buscarQuantidadeInscritos();
         buscarQuantidadeTrabalhos();
         buscarQuantidadeOuvintes();
+        buscarQuantidadeEventos()
+        buscarQuantidadeCH();
+        
     }, []);
 
     return (
-        <Box sx={{ flexGrow: 1, p: 3 }}>
+        <Box sx={{ flexGrow: 1 }}>
             <Grid container spacing={3}>
-                <Grid item xs={12} sm={4}>
+                <Grid item xs={12} sm={6}>
                     <Card>
                         <CardContent>
                             <Typography variant="h6">Total de Eventos</Typography>
+                            <Typography variant="h3">{quantidadeEventos}</Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h6">Total de Trabalhos</Typography>
                             <Typography variant="h3">{quantidadeTrabalhos}</Typography>
                         </CardContent>
                     </Card>
@@ -68,6 +96,14 @@ const Dashboard = () => {
                         <CardContent>
                             <Typography variant="h6">Total de Ouvintes</Typography>
                             <Typography variant="h3">{quantidadeOuvintes}</Typography>
+                        </CardContent>
+                    </Card>
+                </Grid>
+                <Grid item xs={12} sm={4}>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="h6">Média de Carga Horária</Typography>
+                            <Typography variant="h3">{quantidadeCH}</Typography>
                         </CardContent>
                     </Card>
                 </Grid>
