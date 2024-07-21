@@ -21,7 +21,7 @@ function Dashboard() {
   };
 
   return (
-    <Box sx={{ pt: 2, pb: 2, pl: 5, pr: 5 }}>
+    <Box sx={{ pt: 2, pl: 5, pr: 5 }}>
       <Box sx={{ mt: 5 }}>
         <DashboardComponents/>
       </Box>
