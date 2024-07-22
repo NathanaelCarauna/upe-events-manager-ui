@@ -40,7 +40,7 @@ export default function Login() {
         }
       });
       const { access_token, expires_in, user } = response.data;
-      login(access_token, expires_in);
+      login(access_token, expires_in,user.id);
 
       navigate('/');
     } catch (error) {

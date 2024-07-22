@@ -268,6 +268,7 @@ useEffect (() => {
                   displayEmpty
                   onChange={(e) => setEventId(e.target.value)}
                   onOpen={fetchEvents}
+                  label="Evento"
               >
                   {events.map((event) => (
                     <MenuItem value={event.id} key={event.id}>
@@ -285,6 +286,7 @@ useEffect (() => {
                     sx={{ backgroundColor: '#D9D9D9' }}
                     onChange={(e) => setArea(e.target.value)}
                     onOpen={fetchAreas}
+                    label="Área"
                   >
                     {areas.map((area) => (
                       <MenuItem value={area} key={area}>

@@ -1,5 +1,6 @@
 export const TOKEN_KEY = "@Token";
 export const EXPIRATION_KEY = "@Token-Expiration";
+export const USER = "@User";
 
 export const isAuthenticated = () => {
     try {
@@ -19,9 +20,10 @@ export const isAuthenticated = () => {
 
 export const getToken = () => localStorage.getItem(TOKEN_KEY);
 
-export const login = (token, expires_in) => {
+export const login = (token, expires_in,user) => {
   localStorage.setItem(TOKEN_KEY, token);
   localStorage.setItem(EXPIRATION_KEY, expires_in);
+  localStorage.setItem(USER,user)
 };
 
 export const logout = () => {
