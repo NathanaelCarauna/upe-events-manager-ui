@@ -26,7 +26,7 @@ export default function Navbar() {
               Início
             </li>
           </a>
-          <a href="eventos">
+          <a href="/eventos">
             <li
               className={`${styles.menu_item} ${
                 selected === "eventos" ? styles.selected : ""
@@ -36,7 +36,7 @@ export default function Navbar() {
               Eventos
             </li>
           </a>
-          <a href="papers">
+          <a href="/papers">
             <li
               className={`${styles.menu_item} ${
                 selected === "trabalhos" ? styles.selected : ""
