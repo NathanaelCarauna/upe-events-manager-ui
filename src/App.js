@@ -5,6 +5,7 @@ import Eventos from './pages/Eventos';
 import DadosEvento from './pages/DadosEvento';
 import Papers from './pages/Papers';
 import Navbar from './components/Navbar';
+import Login from './pages/Login';
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import Footer from './components/Footer';
@@ -21,6 +22,7 @@ function App() {
           <Route path='/' element={<Dashboard/>} />
           <Route path='/eventos' element={<Eventos/>} />
           <Route path='/papers' element={<Papers/>} />
+          <Route path='/login' element={<Login/>} />
           <Route path='/dados-evento/:event_id' element={<DadosEvento/>} />
           <Route path='/dados-paper/:paper_id' element={<DadosPaper/>} />
         </Routes>
