@@ -34,6 +34,17 @@ const EventStatistics = ({ event_id }) => {
         console.error('Erro ao carregar estatísticas do evento:', error);
       }
     };
+    //Dados mockados
+    setEstatisticas({
+      artigosSubmetidos: 12,
+      artigosAceitos: 9,
+      artigosRejeitados: 3,
+      organizadoresEvento: 'Guilherme Lima Correia, Fábio Rodrigues Souza, Rafaela Ribeiro Ferreira',
+      autoresAceitos: 5,
+      artigosPorArea: 'A ciência da lexicografia',
+      totalPaginasAnais: 85,
+      mediaPaginasPorArtigo: 23
+    });
 
     buscarEstatisticasEvento();
   }, []);

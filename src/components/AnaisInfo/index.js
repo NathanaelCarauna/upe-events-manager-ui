@@ -27,6 +27,12 @@ const AnaisInfo = ({ event_id }) => {
         console.error('Erro ao carregar dados:', error);
       }
     };
+    // Dados mockados
+    setResumo({
+      infoSumario: '',
+      nomeAnais: 'A ARGUMENTAÇÃO E O FÓRUM DE DISCUSSÃO VIRTUAL: UMA QUESTÃO DE LETRAMENTO',
+      arquivoMescladoAnais: 'A ARGUMENTAÇÃO E O FÓRUM DEDISCUSSÃO VIRTUAL: UMA QUESTÃO DE LETRAMENTO'
+    });
 
     buscarDados();
   }, []);
@@ -34,7 +40,7 @@ const AnaisInfo = ({ event_id }) => {
   return (
     <Paper sx={{ p: 2, mb: 2 }}>
       <Typography variant="h5" pb='16px'>Informações dos Anais</Typography>
-      <Typography variant="h6">Diretório de Arquivos do Evento (Somente Admin)</Typography>
+      {/* <Typography variant="h6">Diretório de Arquivos do Evento (Somente Admin)</Typography> */}
       <Typography variant="body1">{diretorio}</Typography>
       <Typography variant="body1"><strong>Sumário</strong> {resumo.infoSumario}</Typography>
       <Typography variant="body1"><strong>Nome:</strong> {resumo.nomeAnais}</Typography>

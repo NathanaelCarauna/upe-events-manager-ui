@@ -55,6 +55,12 @@ const Dashboard = () => {
                 console.error('Erro ao buscar a quantidade de trabalhos:', erro);
             }
         };
+        // Dados mockados
+        setQuantidadeTrabalhos(114);
+        setQuantidadeInscritos(58);
+        setQuantidadeOuvintes(89);
+        setQuantidadeEventos(19);
+        setQuantidadeCH(6);
 
         buscarQuantidadeInscritos();
         buscarQuantidadeTrabalhos();
