@@ -6,7 +6,7 @@ function Papers () {
   return (
 
     <>
-      <PapersList event_id={0} eventModal ={false}/>
+      <PapersList event_id={0} paperDetail ={false}/>
     </>
 
   );

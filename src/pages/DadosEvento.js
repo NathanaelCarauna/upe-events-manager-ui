@@ -1,8 +1,10 @@
 import React,{ useState, useEffect } from 'react';
-import { Box, Container, Typography,Grid,Paper } from '@mui/material';
+import { Divider, Container, Typography,Grid,Accordion,AccordionDetails,AccordionSummary  } from '@mui/material';
 import api from '../services/api';
 import { useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import PapersList from '../components/PapersList'
 
 function DadosEvento() {
   const {event_id} = useParams();
@@ -18,14 +20,14 @@ function DadosEvento() {
   });
 
   const [estatisticas, setEstatisticas] = useState({
-    artigosSubmetidos: 0,
-    artigosAceitos: 0,
+    artigosSubmetidos: 10,
+    artigosAceitos: 10,
     artigosRejeitados: 0,
     organizadoresEvento: '',
-    autoresAceitos: 0,
+    autoresAceitos: 8,
     artigosPorArea: '',
-    totalPaginasAnais: 0,
-    mediaPaginasPorArtigo: 0
+    totalPaginasAnais: 100,
+    mediaPaginasPorArtigo: 10
   });
 
   const [marcos, setMarcos] = useState('');
@@ -34,6 +36,7 @@ function DadosEvento() {
   const fetchEvent = async () => {
     try {
       const event = await api.get('/events/' + event_id);
+      console.log(event)
 
       /*Pendencias:
 
@@ -98,70 +101,86 @@ function DadosEvento() {
           <ArrowBackIcon/> 
           <Typography>Voltar</Typography>
       </a>
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h5" pb='16px'>Informações do Evento</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Nome do Evento:</strong> {evento.nome}</Typography>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ArrowDropDownIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header">
+          <Typography variant="h5">Informações do Evento</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Nome do Evento:</strong> {evento.nome}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Instituição Organizadora:</strong> {evento.organizador}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Data de Início:</strong> {evento.dataInicio.substring(0, 10)}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Data de Fim:</strong> {evento.dataFim.substring(0, 10)}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Marcos do Evento</Typography>
+              <Typography variant="body1">{marcos}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Resumo</Typography>
+              <Typography variant="body1">{evento.resumo}</Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Instituição Organizadora:</strong> {evento.organizador}</Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ArrowDropDownIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header">
+          <Typography variant="h5">Estatísticas do Evento</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Artigos Submetidos:</strong> {estatisticas.artigosSubmetidos}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Artigos Aceitos:</strong> {estatisticas.artigosAceitos}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Artigos Rejeitados:</strong> {estatisticas.artigosRejeitados}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Organizadores do Evento:</strong> {estatisticas.organizadoresEvento}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Autores Aceitos:</strong> {estatisticas.autoresAceitos}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Artigos por Área de Conhecimento:</strong> {estatisticas.artigosPorArea}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Total de Páginas dos Anais:</strong> {estatisticas.totalPaginasAnais}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Média de Páginas por Artigo:</strong> {estatisticas.mediaPaginasPorArtigo}</Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Data de Início:</strong> {evento.dataInicio.substring(0, 10)}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Data de Fim:</strong> {evento.dataFim.substring(0, 10)}</Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6">Marcos do Evento</Typography>
-            <Typography variant="body1">{marcos}</Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6">Resumo</Typography>
-            <Typography variant="body1">{evento.resumo}</Typography>
-          </Grid>
-        </Grid>
-      </Paper>
-
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h5" pb='16px'>Informações dos Anais</Typography>
-        <Typography variant="h6">Diretório de Arquivos do Evento (Somente Admin)</Typography>
-        <Typography variant="body1">{diretorio}</Typography>
-        <Typography variant="body1"><strong>Sumário</strong> {evento.infoSumario}</Typography>
-        <Typography variant="body1"><strong>Nome:</strong> {evento.nomeAnais}</Typography>
-        <Typography variant="body1"><strong>Nome do Arquivo de Anais após mescla de Artigos:</strong> {evento.arquivoMescladoAnais}</Typography>
-      </Paper>
-
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h5" pb='16px'>Estatísticas do Evento</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Artigos Submetidos:</strong> {estatisticas.artigosSubmetidos}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Artigos Aceitos:</strong> {estatisticas.artigosAceitos}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Artigos Rejeitados:</strong> {estatisticas.artigosRejeitados}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Organizadores do Evento:</strong> {estatisticas.organizadoresEvento}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Autores Aceitos:</strong> {estatisticas.autoresAceitos}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Artigos por Área de Conhecimento:</strong> {estatisticas.artigosPorArea}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Total de Páginas dos Anais:</strong> {estatisticas.totalPaginasAnais}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Média de Páginas por Artigo:</strong> {estatisticas.mediaPaginasPorArtigo}</Typography>
-          </Grid>
-        </Grid>
-      </Paper>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ArrowDropDownIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography variant="h5">Informações dos Anais</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <PapersList evento_id={event_id} paperDetail={true}/>
+        </AccordionDetails>
+      </Accordion>
     </Container>
   );
 };

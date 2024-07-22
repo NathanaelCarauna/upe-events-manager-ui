@@ -1,40 +1,39 @@
 import React,{ useState, useEffect } from 'react';
-import { Box, Container, Typography,Grid,Paper } from '@mui/material';
+import { Container, Typography,Grid,Accordion,AccordionDetails,AccordionSummary } from '@mui/material';
 import api from '../services/api';
 import { useParams } from 'react-router-dom';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 
 function DadosPaper() {
   const{paper_id} = useParams();
   const [evento, setEvento] = useState({
-    nome: '',
-    organizador: '',
-    dataInicio: '',
-    dataFim: '',
+    nome: 'Evento',
+    organizador: 'Universidade de Pernambuco',
+    dataInicio: '04/05/2024',
+    dataFim: '07/05/2024',
   });
 
   const [artigo, setArtigo] = useState({
-    titulo: '',
-    autores: '',
-    resumo: '',
-    anoDePublicacao: '',
-    downloadLink: '',
-    area: '',
-    totalPaginas: 0
+    titulo: 'Artigo',
+    autores: 'Autor',
+    resumo: 'Resumo do artigo',
+    anoDePublicacao: '2024',
+    downloadLink: 'www.downloadlink.com/artigo',
+    area: 'Área',
+    totalPaginas: 10
   });
 
   const [estatisticas, setEstatisticas] = useState({
-    artigosSubmetidos: 0,
-    artigosAceitos: 0,
+    artigosSubmetidos: 1,
+    artigosAceitos: 1,
     artigosRejeitados: 0,
-    organizadoresEvento: '',
-    autoresAceitos: 0,
-    artigosPorArea: '',
-    totalPaginasAnais: 0,
-    mediaPaginasPorArtigo: 0
+    organizadoresEvento: 'Organizadores',
+    autoresAceitos: 1,
+    artigosPorArea: '1',
+    totalPaginasAnais: 11,
+    mediaPaginasPorArtigo: 10
   });
-
-  const [resumo, setResumo] = useState('');
 
   const fetchPaper = async () => {
     try {
@@ -104,67 +103,81 @@ function DadosPaper() {
           <ArrowBackIcon/> 
           <Typography>Voltar</Typography>
       </a>
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h5" pb='16px'>Informações do Artigo</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Título do Artigo:</strong> {artigo.titulo}</Typography>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ArrowDropDownIcon />}
+          aria-controls="panel2-content"
+          id="panel2-header"
+        >
+          <Typography variant="h5">Informações do paper</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Título do Artigo:</strong> {artigo.titulo}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Autores:</strong> {artigo.autores}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Área:</strong> {artigo.area}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Evento:</strong> {evento.name}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Ano de publicação:</strong> {artigo.anoDePublicacao}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Link para download:</strong> {artigo.downloadLink}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Total de páginas:</strong> {artigo.totalPaginas}</Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Typography variant="h6">Resumo</Typography>
+              <Typography variant="body1">{artigo.resumo}</Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Autores:</strong> {artigo.autores}</Typography>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion>
+        <AccordionSummary
+          expandIcon={<ArrowDropDownIcon />}
+          aria-controls="panel1-content"
+          id="panel1-header"
+        >
+          <Typography variant="h5">Estatísticas do Paper</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Grid container spacing={2}>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Artigos Submetidos:</strong> {estatisticas.artigosSubmetidos}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Artigos Aceitos:</strong> {estatisticas.artigosAceitos}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Artigos Rejeitados:</strong> {estatisticas.artigosRejeitados}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Organizadores do Evento:</strong> {estatisticas.organizadoresEvento}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Autores Aceitos:</strong> {estatisticas.autoresAceitos}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Artigos por Área de Conhecimento:</strong> {estatisticas.artigosPorArea}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Total de Páginas dos Anais:</strong> {estatisticas.totalPaginasAnais}</Typography>
+            </Grid>
+            <Grid item xs={12} sm={6}>
+              <Typography variant="body1"><strong>Média de Páginas por Artigo:</strong> {estatisticas.mediaPaginasPorArtigo}</Typography>
+            </Grid>
           </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Área:</strong> {artigo.area}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Evento:</strong> {evento.name}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Ano de publicação:</strong> {artigo.anoDePublicacao}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Link para download:</strong> {artigo.downloadLink}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Total de páginas:</strong> {artigo.totalPaginas}</Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <Typography variant="h6">Resumo</Typography>
-            <Typography variant="body1">{resumo}</Typography>
-          </Grid>
-        </Grid>
-      </Paper>
-
-
-      <Paper sx={{ p: 2, mb: 2 }}>
-        <Typography variant="h5" pb='16px'>Estatísticas do Paper</Typography>
-        <Grid container spacing={2}>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Artigos Submetidos:</strong> {estatisticas.artigosSubmetidos}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Artigos Aceitos:</strong> {estatisticas.artigosAceitos}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Artigos Rejeitados:</strong> {estatisticas.artigosRejeitados}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Organizadores do Evento:</strong> {estatisticas.organizadoresEvento}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Autores Aceitos:</strong> {estatisticas.autoresAceitos}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Artigos por Área de Conhecimento:</strong> {estatisticas.artigosPorArea}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Total de Páginas dos Anais:</strong> {estatisticas.totalPaginasAnais}</Typography>
-          </Grid>
-          <Grid item xs={12} sm={6}>
-            <Typography variant="body1"><strong>Média de Páginas por Artigo:</strong> {estatisticas.mediaPaginasPorArtigo}</Typography>
-          </Grid>
-        </Grid>
-      </Paper>
+        </AccordionDetails>
+      </Accordion>
     </Container>
   );
 };

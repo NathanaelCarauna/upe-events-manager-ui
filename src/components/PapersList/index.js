@@ -13,8 +13,9 @@ import Pagination from '@mui/material/Pagination';
 import { styled } from '@mui/material/styles';
 import styles from "./index.module.css";
 import Divider from '@mui/material/Divider';
+import FiltrosAplicados from '../FiltrosAplicados';
 
-function PapersList (props) {
+function PapersList ({evento_id,paperDetail}) {
   const [papers, setPapers] = useState([]);
   const [events, setEvents] = useState([]);
   const [areas, setAreas] = useState([]);
@@ -27,6 +28,7 @@ function PapersList (props) {
   const [totalPages,setTotalPages] = useState(0);
   const [sortConfig, setSortConfig] = useState({ key: 'id', direction: 'asc' });
   const [open, setOpen] = React.useState(false);
+  const [filtrosAplicados, setFiltrosAplicados] = useState(false);
 
   const StyledTableRow = styled(TableRow)(({ theme }) => ({
     '&:nth-of-type(odd)': {
@@ -56,22 +58,18 @@ const paperDetailURL = (id) => {
     }
   };
 
-  const clearParams = () => {
-    setSearch(null);
-    setArea(null);
-    setEventId(null);
-    setPage(1);
-    setSortConfig({ key: 'id', direction: 'asc' });
-  };
-
-
   const fetchPapers = async () => {
     setLoading(true);
     let event_id = null;
-    if(props.eventModal){
-      event_id = props.event_id;      
+    if(paperDetail){
+      event_id = evento_id;      
     }else{
       event_id = eventId;
+    }
+    if (search || eventId || area){
+      setFiltrosAplicados(true);
+    } else{
+        setFiltrosAplicados(false);
     }
     api.get('/papers',{ 
       params: {
@@ -86,6 +84,7 @@ const paperDetailURL = (id) => {
     }).then((response) => {
       setPapers(response.data.papers);
       setLoading(false);
+      console.log(response.data.papers)
       setTotalPages(response.data.total_pages);
     }).catch((error) => {
       setError(error);
@@ -112,10 +111,41 @@ const fetchAreas = async () => {
   }
 };
 
+const makeFilters = () => {
+  console.log("teste foi aqui")
+  return [
+      { label: 'Pesquisa', value: search, key: 'search' },
+      { label: 'Area', value: area, key: 'area' },
+      { label: 'Evento', value: eventId, key: 'eventId' },
+  ];
+};
+
+const clearSpecificFilter = (filterKey) => {
+  switch (filterKey) {
+      case 'search':
+        setSearch('');
+        setPage(1);
+        setSortConfig({ key: 'id', direction: 'asc' });
+        break;
+      case 'area':
+        setArea('');
+        setPage(1);
+        setSortConfig({ key: 'id', direction: 'asc' });
+        break;
+      case 'eventId':
+        setEventId(null);
+        setPage(1);
+        setSortConfig({ key: 'id', direction: 'asc' });
+          break;
+      default:
+          break;
+  }
+}
+
 
 useEffect (() => {
   fetchPapers();
-},[page, sortConfig,eventId,area]);
+},[page, sortConfig,eventId,area,search]);
 
   const handleSortRequest = (key) => {
       let direction = 'asc';
@@ -128,6 +158,7 @@ useEffect (() => {
 
   return (
         <Box sx={{ pt: 5, pb: 2, pl: 10, pr: 10 }}>
+          {!paperDetail && 
           <Box component="form" sx={{ mb: 3, pb: 1 }}>
                 <Grid container spacing={3} justifyContent="center" sx={{ pb: 1}}>
                   <Grid item xs={12} sm={6} md={11.3} sx={{pl: 2}}>
@@ -188,8 +219,15 @@ useEffect (() => {
                         </Button>
                  </Grid>
                 </Grid>
-            </Box>
-            <Modal
+          </Box>        
+          }
+          {filtrosAplicados && !paperDetail && (
+            <FiltrosAplicados
+                filters={makeFilters}
+                clearFilters={clearSpecificFilter}
+            />
+          )} 
+          <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="parent-modal-title"
@@ -220,8 +258,6 @@ useEffect (() => {
             <Divider sx={{ mb: 2, bgcolor: '#1C3C78' }} />
 
             <Grid container spacing={3} justifyContent="center" sx={{ pb: 2 }}>
-              {
-                !props.eventModal && 
                 <Grid item lg={6} md={6} sm={6}>
                   <Select
                   sx={{ backgroundColor: '#D9D9D9' }}
@@ -240,8 +276,7 @@ useEffect (() => {
                   ))}
                 </Select>
               </Grid>
-              }
-              <Grid item lg={props.eventModal? 12 : 6} md={props.eventModal? 12 : 6} sm={props.eventModal? 12 : 6}>
+              <Grid item lg={6} md={6} sm={6}>
                 <Select
                     defaultValue=""
                     value={area}
@@ -300,8 +335,8 @@ useEffect (() => {
                         Páginas
                     </TableSortLabel>
                 </Grid>
-            </Grid>
-        </Box>
+              </Grid>
+            </Box>
             </Modal>
             <TableContainer component={Box} sx={{ borderRadius: '8px'}}>
                 {loading && <CircularProgress />}
@@ -339,7 +374,7 @@ useEffect (() => {
                                         Evento:
                                       </Typography>
                                       <Typography>
-                                        Evento Teste
+                                        {paper.event_name}
                                       </Typography>
                                     </TableCell>
                                     <TableCell style={{ width: "20%", textAlign: 'left' }}>
@@ -350,6 +385,7 @@ useEffect (() => {
                                         {paper.area}
                                       </Typography>
                                     </TableCell>
+                                    {!paperDetail &&
                                     <TableCell style={{ width: "3%", textAlign: 'center'}}>
                                       <Tooltip title="Informações do artigo" arrow>
                                         <a href={paperDetailURL(paper.id)}>
@@ -357,6 +393,7 @@ useEffect (() => {
                                         </a>
                                       </Tooltip>
                                     </TableCell>
+                                    }
                                     <TableCell style={{ width: "3%", textAlign: 'center'}}>
                                       <Tooltip title="Baixar artigo" arrow>
                                         <a href={paper.pdf_download_link} target="_blank" rel="noopener noreferrer" download>

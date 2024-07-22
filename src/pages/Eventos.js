@@ -12,6 +12,7 @@ import FilterAltIcon from '@mui/icons-material/FilterAlt';
 import SearchIcon from '@mui/icons-material/Search';
 import styles from "../components/PapersList/index.module.css";
 import Divider from '@mui/material/Divider';
+import FiltrosAplicados from '../components/FiltrosAplicados';
 
 function Eventos() {
     const [events, setEvents] = useState([]);
@@ -19,12 +20,10 @@ function Eventos() {
     const [error, setError] = useState(null);
     const [sortConfig, setSortConfig] = useState({ key: 'name', direction: 'asc' });
     const [open, setOpen] = React.useState(false);
-    const [nome, setNome] = useState(null);
-    const [dataInicio, setDataInicio] = useState(null);
-    const [dataFim, setDataFim] = useState(null);
-    const [promovidoPor, setPromovidoPor] = useState(null);
+    const [nome, setNome] = useState(null); 
     const [page, setPage] = useState(1);
     const [totalPages,setTotalPages] = useState(0);
+    const [filtrosAplicados, setFiltrosAplicados] = useState(false);
 
     const StyledTableRow = styled(TableRow)(({ theme }) => ({
         '&:nth-of-type(odd)': {
@@ -46,6 +45,18 @@ function Eventos() {
     const eventDetailURL = (id) => {
         return "dados-evento/" + id;
     };
+
+    const clearSpecificFilter = (filterKey) => {
+        switch (filterKey) {
+            case 'nome':
+                setNome('');
+                setPage(1);
+                setSortConfig({ key: 'id', direction: 'asc' });
+                break;
+            default:
+                break;
+        }
+    }
 
     const DownloadCell = ({ event }) => {
         const [anchorEl, setAnchorEl] = React.useState(null);
@@ -95,15 +106,15 @@ function Eventos() {
         setLoading(true);
         var initial_date = null;
         var final_date = null;
-        if (dataInicio) initial_date = formatar_backend(dataInicio);
-        if (dataFim) final_date = formatar_backend(dataFim);
+        if (nome){
+            setFiltrosAplicados(true);
+        } else{
+            setFiltrosAplicados(false);
+        }
         try {
             const response = await api.get('/events', {
                 params: {
                     name: nome,
-                    promoted_by: promovidoPor,
-                    initial_date,
-                    final_date,
                     page: page,
                     page_size: 10,
                     sort_by: sortConfig.key,
@@ -121,7 +132,7 @@ function Eventos() {
 
     const formatar_backend = (date) => {
         const [year, month, day] = date.split('-');
-        return `${day}-${month}-${year}`;
+        return `${day[0] + day[1]}/${month}/${year}`;
     };
 
     useEffect(() => {
@@ -141,6 +152,12 @@ function Eventos() {
           event.preventDefault(); // Evita o comportamento padrão do Enter
           fetchEvents();
         }
+      };
+
+    const makeFilters = () => {
+        return [
+            { label: 'Nome', value: nome, key: 'nome' },
+        ];
       };
 
     return (
@@ -207,6 +224,14 @@ function Eventos() {
                         </Grid>
                     </Grid>
             </Box>
+
+            {filtrosAplicados && (
+                    <FiltrosAplicados
+                        filters={makeFilters}
+                        clearFilters={clearSpecificFilter}
+                    />
+            )}           
+
             <Modal
                 open={open}
                 onClose={handleClose}
