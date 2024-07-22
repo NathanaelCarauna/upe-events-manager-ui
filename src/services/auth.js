@@ -11,6 +11,7 @@ export const isAuthenticated = () => {
   
       // Converte a data de expiração para um timestamp
       const expirationDate = new Date(expiration).getTime();
+      console.log(Date.now() < expirationDate);
       return Date.now() < expirationDate;
     } catch (error) {
       console.error('Erro ao verificar autenticação:', error);
@@ -27,6 +28,9 @@ export const login = (token, expires_in,user) => {
 };
 
 export const logout = () => {
+  console.log(isAuthenticated());
   localStorage.removeItem(TOKEN_KEY);
   localStorage.removeItem(EXPIRATION_KEY);
+  localStorage.removeItem(USER);
+  console.log(isAuthenticated());
 };

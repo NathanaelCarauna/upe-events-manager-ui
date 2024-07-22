@@ -1,6 +1,7 @@
 import * as React from "react";
 import styles from "./index.module.css";
 import logo from "../../images/logo_upe.png";
+import { logout, isAuthenticated } from "../../services/auth";
 
 export default function Navbar() {
   const [selected, setSelected] = React.useState("inicio");
@@ -46,6 +47,30 @@ export default function Navbar() {
               Trabalhos
             </li>
           </a>
+          {isAuthenticated() && (
+            <a href="/papers">
+            <li
+              className={`${styles.menu_item} ${
+                selected === "trabalhos" ? styles.selected : ""
+              }`}
+              onClick={logout}
+            >
+              Sair
+            </li>
+          </a>
+          )}
+          {!isAuthenticated() && (
+            <a href="/login">
+            <li
+              className={`${styles.menu_item} ${
+                selected === "login" ? styles.selected : ""
+              }`}
+              onClick={() => handleMenuClick("login")}
+            >
+              Login
+            </li>
+          </a>
+          )}
         </ul>
       </div>
       <div className={styles.red_bar}></div>
